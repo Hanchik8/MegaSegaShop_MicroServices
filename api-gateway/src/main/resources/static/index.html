@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MegaSegaShop</title>
+    <meta name="description" content="MegaSegaShop storefront powered by microservices." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">
+          <div class="brand-mark">MS</div>
+          <div>
+            <div class="brand-title">MegaSegaShop</div>
+            <div class="brand-subtitle">Arcade grade gear, curated and ready.</div>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#catalog">Catalog</a>
+          <a href="#story">Story</a>
+          <a href="#ops">Ops</a>
+        </nav>
+        <a class="cta-button" href="#catalog">Browse now</a>
+      </header>
+
+      <main>
+        <section class="hero" id="story">
+          <div class="hero-copy">
+            <div class="pill">Live: product-service sync</div>
+            <h1>Retro power, modern reliability.</h1>
+            <p>
+              MegaSegaShop is a fast lane to iconic hardware and games. Every item
+              is streamed from a live catalog, priced in real time, and delivered
+              with arcade precision.
+            </p>
+            <div class="hero-actions">
+              <a class="primary" href="#catalog">Explore catalog</a>
+              <a class="ghost" href="/actuator/health">System health</a>
+            </div>
+            <div class="hero-stats">
+              <div>
+                <span>9</span>
+                <small>microservices</small>
+              </div>
+              <div>
+                <span>6</span>
+                <small>live databases</small>
+              </div>
+              <div>
+                <span>24/7</span>
+                <small>inventory sync</small>
+              </div>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <div class="panel-card">
+              <div class="panel-title">Featured bundle</div>
+              <div class="panel-name">MegaSega Classic</div>
+              <div class="panel-detail">Retro console + wired pad</div>
+              <div class="panel-price">$129.99</div>
+              <div class="panel-tag">Ships in 48h</div>
+            </div>
+            <div class="panel-card highlight">
+              <div class="panel-title">What is live?</div>
+              <p>
+                This UI is served by the API gateway and pulls product data straight
+                from product-service. No mock data, no shortcuts.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="catalog" id="catalog">
+          <div class="section-head">
+            <div>
+              <h2>Catalog</h2>
+              <p>Filter by category or brand to shape the lineup.</p>
+            </div>
+            <div class="filters">
+              <label class="filter">
+                Category
+                <select id="categoryFilter">
+                  <option value="">All categories</option>
+                </select>
+              </label>
+              <label class="filter">
+                Brand
+                <select id="brandFilter">
+                  <option value="">All brands</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="catalog-meta">
+            <div id="catalogCount">Loading products...</div>
+            <div id="catalogStatus" class="status-pill">Contacting product-service</div>
+          </div>
+
+          <div id="productGrid" class="product-grid loading">
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+            <article class="product-card skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="ops" id="ops">
+          <div class="ops-card">
+            <div class="ops-title">Architecture pulse</div>
+            <p>
+              API gateway routes to dedicated microservices for auth, users,
+              products, cart, inventory, orders, and notifications. Redis speeds
+              up catalog reads. Kafka keeps inventory in sync.
+            </p>
+            <div class="ops-grid">
+              <div>
+                <span>Config Server</span>
+                Centralized settings and profile control.
+              </div>
+              <div>
+                <span>Eureka</span>
+                Service discovery with live registry.
+              </div>
+              <div>
+                <span>Kafka</span>
+                Event stream for inventory updates.
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div>MegaSegaShop</div>
+        <div class="footer-meta">Gateway UI powered by product-service.</div>
+      </footer>
+    </div>
+
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

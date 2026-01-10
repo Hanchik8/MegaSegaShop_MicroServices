@@ -1,0 +1,546 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg: #f7efe4;
+  --bg-alt: #efe1d2;
+  --ink: #1b1714;
+  --ink-soft: #5b4f45;
+  --accent: #ff6f3d;
+  --accent-2: #16a6a1;
+  --accent-3: #1e6fe0;
+  --card: #fff8f1;
+  --border: rgba(27, 23, 20, 0.14);
+  --shadow: 0 24px 60px rgba(42, 28, 18, 0.18);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", "Space Grotesk", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 111, 61, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(30, 111, 224, 0.16), transparent 40%),
+    linear-gradient(120deg, var(--bg) 0%, var(--bg-alt) 100%);
+  min-height: 100vh;
+}
+
+.page {
+  position: relative;
+  overflow: hidden;
+  padding: 32px clamp(20px, 4vw, 72px) 40px;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(27, 23, 20, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 23, 20, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(22, 166, 161, 0.25) 0%, transparent 70%);
+  right: -120px;
+  bottom: 120px;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 20px;
+  background: rgba(247, 239, 228, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(30, 22, 16, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.brand-subtitle {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  font-size: 0.95rem;
+}
+
+.nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: var(--accent-3);
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 12px 20px rgba(27, 23, 20, 0.2);
+}
+
+.hero {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  position: relative;
+  padding: 32px;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: rgba(255, 248, 241, 0.8);
+  box-shadow: var(--shadow);
+  animation: hero-in 0.8s ease;
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(22, 166, 161, 0.12);
+  color: var(--accent-2);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero h1 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2.2rem, 3vw, 3rem);
+  margin: 16px 0;
+}
+
+.hero p {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.primary,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 14px 24px rgba(255, 111, 61, 0.3);
+}
+
+.ghost {
+  border: 1px solid var(--border);
+  color: var(--ink);
+  background: #fff;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.hero-stats div {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(27, 23, 20, 0.06);
+  text-align: left;
+}
+
+.hero-stats span {
+  display: block;
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.hero-stats small {
+  color: var(--ink-soft);
+}
+
+.hero-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.panel-card {
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: #fff;
+  box-shadow: 0 14px 24px rgba(27, 23, 20, 0.08);
+}
+
+.panel-card.highlight {
+  background: linear-gradient(150deg, rgba(22, 166, 161, 0.12), rgba(30, 111, 224, 0.1));
+}
+
+.panel-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+}
+
+.panel-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 10px 0 4px;
+}
+
+.panel-detail {
+  color: var(--ink-soft);
+}
+
+.panel-price {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.4rem;
+  margin-top: 14px;
+}
+
+.panel-tag {
+  margin-top: 12px;
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 111, 61, 0.15);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.catalog {
+  margin-top: 48px;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.section-head h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2rem;
+  margin-bottom: 6px;
+}
+
+.section-head p {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.filter select {
+  min-width: 160px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.95rem;
+}
+
+.catalog-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-weight: 500;
+}
+
+.status-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(30, 111, 224, 0.12);
+  color: var(--accent-3);
+  font-size: 0.85rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
+}
+
+.product-card {
+  position: relative;
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: 0 16px 30px rgba(27, 23, 20, 0.1);
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.product-card.is-visible {
+  animation: card-in 0.55s ease forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes card-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card h3 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.1rem;
+  margin: 0 0 6px;
+}
+
+.product-card .brand {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.product-card .description {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  min-height: 44px;
+}
+
+.product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.price {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(22, 166, 161, 0.16);
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.inventory {
+  margin-top: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.inventory span {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.inventory-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(27, 23, 20, 0.1);
+  overflow: hidden;
+}
+
+.inventory-bar div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.skeleton {
+  opacity: 1;
+  transform: none;
+  background: rgba(27, 23, 20, 0.05);
+  border-style: dashed;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 10px;
+  background: rgba(27, 23, 20, 0.12);
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.skeleton-line.wide {
+  width: 80%;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.ops {
+  margin-top: 56px;
+}
+
+.ops-card {
+  padding: 28px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 18px 34px rgba(27, 23, 20, 0.1);
+}
+
+.ops-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.ops-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.ops-grid span {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.site-footer {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.footer-meta {
+  font-family: "JetBrains Mono", monospace;
+}
+
+@media (max-width: 960px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
