@@ -23,7 +23,6 @@ public class Product {
     private String brand;
     private String description;
     private BigDecimal price;
-    private int inventory;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

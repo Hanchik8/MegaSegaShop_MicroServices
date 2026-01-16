@@ -1,16 +1,18 @@
 package org.example.megasegashop.product.service.product;
 
+import org.example.megasegashop.product.dto.ProductUpdateRequest;
+import org.example.megasegashop.product.model.Category;
 import org.example.megasegashop.product.model.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(Product product, int initialQuantity);
     List<Product> getAllProducts();
     Product getProductById(Long id);
     void deleteProductById(Long id);
-    void updateProduct(Product product);
+    Product updateProduct(Long id, ProductUpdateRequest request, Category category);
     List<Product> getProductsByPriceRange(BigDecimal min, BigDecimal max);
     List<Product> getProductsByCategory(String category);
 

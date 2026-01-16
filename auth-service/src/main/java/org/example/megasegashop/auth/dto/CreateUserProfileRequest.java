@@ -8,6 +8,7 @@ public record CreateUserProfileRequest(
         @NotNull Long authUserId,
         @Email @NotBlank String email,
         @NotBlank String firstName,
-        @NotBlank String lastName
+        @NotBlank String lastName,
+        String phone
 ) {
 }

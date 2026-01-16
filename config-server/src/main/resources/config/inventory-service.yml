@@ -25,6 +25,12 @@ spring:
       spring.json.trusted.packages: org.example.megasegashop.inventory.event
       spring.json.value.default.type: org.example.megasegashop.inventory.event.ProductCreatedEvent
 
+inventory:
+  seed:
+    enabled: ${INVENTORY_SEED_ENABLED:false}
+    product-service-url: ${INVENTORY_SEED_PRODUCT_SERVICE_URL:http://product-service}
+    default-quantity: ${INVENTORY_SEED_DEFAULT_QUANTITY:0}
+
 eureka:
   client:
     service-url:

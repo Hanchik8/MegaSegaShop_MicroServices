@@ -12,7 +12,7 @@ public record ProductCreateRequest(
         @NotBlank String brand,
         @NotBlank String description,
         @NotNull @Positive BigDecimal price,
-        @NotNull @Min(0) Integer inventory,
+        @NotNull @Min(0) Integer initialQuantity,
         @NotBlank String category
 ) {
 }

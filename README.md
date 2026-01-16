@@ -73,7 +73,8 @@ curl -i -X POST http://localhost:8080/api/auth/register \
     "email": "demo@megasega.shop",
     "password": "DemoPass123!",
     "firstName": "Demo",
-    "lastName": "User"
+    "lastName": "User",
+    "phone": "+15555550123"
   }'
 ```
 
@@ -104,7 +105,7 @@ curl -i -X POST http://localhost:8080/api/products \
     "brand": "MegaSega",
     "description": "Limited demo controller",
     "price": 49.99,
-    "inventory": 20,
+    "initialQuantity": 20,
     "category": "Accessories"
   }'
 ```
@@ -141,6 +142,7 @@ curl -i -X POST http://localhost:8080/api/orders \
 
 ## Дополнительно
 - Просмотр каталога: `GET http://localhost:8080/api/products`
+- Остаток товара: `GET http://localhost:8080/api/products/{id}/stock`
 - Очистка корзины: `DELETE http://localhost:8080/api/cart/{userId}`
 
 ## Local PowerShell helper (env-local.ps1)

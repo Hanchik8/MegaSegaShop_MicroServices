@@ -8,6 +8,7 @@
 
 x-jwt-secret: &jwt-secret
   SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:-change-me-demo-secret-32-bytes-minimum-123456}
+  SECURITY_JWT_EXPIRATION_MINUTES: ${SECURITY_JWT_EXPIRATION_MINUTES:-60}
 
 x-db-credentials: &db-credentials
   SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-megasega}
@@ -54,7 +55,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
@@ -97,6 +98,7 @@ services:
       - "8888:8888"
     networks:
       - megasegashop-net
+    restart: on-failure
 
   discovery-server:
     build:
@@ -108,11 +110,12 @@ services:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
     ports:
       - "8761:8761"
     networks:
       - megasegashop-net
+    restart: on-failure
 
   api-gateway:
     build:
@@ -127,12 +130,13 @@ services:
     environment:
       <<: *jwt-secret
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     ports:
       - "8080:8080"
     networks:
       - megasegashop-net
+    restart: on-failure
 
   auth-service:
     build:
@@ -149,11 +153,12 @@ services:
     environment:
       <<: [*jwt-secret, *db-credentials]
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_db
     networks:
       - megasegashop-net
+    restart: on-failure
 
   user-service:
     build:
@@ -170,11 +175,12 @@ services:
     environment:
       <<: *db-credentials
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_db
     networks:
       - megasegashop-net
+    restart: on-failure
 
   product-service:
     build:
@@ -195,7 +201,7 @@ services:
     environment:
       <<: *db-credentials
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product_db
       SPRING_DATA_REDIS_HOST: redis
@@ -203,6 +209,7 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     networks:
       - megasegashop-net
+    restart: on-failure
 
   cart-service:
     build:
@@ -221,13 +228,14 @@ services:
     environment:
       <<: *db-credentials
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cart_db
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     networks:
       - megasegashop-net
+    restart: on-failure
 
   inventory-service:
     build:
@@ -246,12 +254,13 @@ services:
     environment:
       <<: *db-credentials
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/inventory_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     networks:
       - megasegashop-net
+    restart: on-failure
 
   order-service:
     build:
@@ -270,12 +279,13 @@ services:
     environment:
       <<: *db-credentials
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     networks:
       - megasegashop-net
+    restart: on-failure
 
   notification-service:
     build:
@@ -291,11 +301,12 @@ services:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     networks:
       - megasegashop-net
+    restart: on-failure
 
 networks:
   megasegashop-net:

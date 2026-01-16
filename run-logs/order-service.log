@@ -1,0 +1,96 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< org.example:order-service >----------------------
+[INFO] Building order-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.6:run (default-cli) > test-compile @ order-service >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ order-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ order-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ order-service ---
+[INFO] skip non existing resourceDirectory C:\Users\ProBook\Desktop\MegaSegaShop\order-service\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ order-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.6:run (default-cli) < test-compile @ order-service <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.6:run (default-cli) @ order-service ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.6)
+
+2026-01-16T17:13:10.305+06:00  INFO 25880 --- [order-service] [           main] o.e.m.order.OrderServiceApplication      : Starting OrderServiceApplication using Java 21.0.9 with PID 25880 (C:\Users\ProBook\Desktop\MegaSegaShop\order-service\target\classes started by ProBook in C:\Users\ProBook\Desktop\MegaSegaShop\order-service)
+2026-01-16T17:13:10.310+06:00  INFO 25880 --- [order-service] [           main] o.e.m.order.OrderServiceApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T17:13:10.419+06:00  INFO 25880 --- [order-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://localhost:8888
+2026-01-16T17:13:10.446+06:00  INFO 25880 --- [order-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=order-service, profiles=[default], label=null, version=null, state=null
+2026-01-16T17:13:12.712+06:00  INFO 25880 --- [order-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T17:13:12.934+06:00  INFO 25880 --- [order-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 211 ms. Found 1 JPA repository interface.
+2026-01-16T17:13:13.392+06:00  INFO 25880 --- [order-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=d3b1255e-934e-31f1-ab77-9a149c899e04
+2026-01-16T17:13:14.497+06:00  INFO 25880 --- [order-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8086 (http)
+2026-01-16T17:13:14.521+06:00  INFO 25880 --- [order-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T17:13:14.523+06:00  INFO 25880 --- [order-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+2026-01-16T17:13:14.680+06:00  INFO 25880 --- [order-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T17:13:14.685+06:00  INFO 25880 --- [order-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4221 ms
+2026-01-16T17:13:15.380+06:00  INFO 25880 --- [order-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T17:13:15.467+06:00  INFO 25880 --- [order-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-01-16T17:13:15.538+06:00  INFO 25880 --- [order-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T17:13:16.081+06:00  INFO 25880 --- [order-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T17:13:16.143+06:00  INFO 25880 --- [order-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-16T17:13:16.496+06:00  INFO 25880 --- [order-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@15a8bbe5
+2026-01-16T17:13:16.500+06:00  INFO 25880 --- [order-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-16T17:13:18.704+06:00  INFO 25880 --- [order-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T17:13:18.915+06:00  INFO 25880 --- [order-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T17:13:19.297+06:00  INFO 25880 --- [order-service] [           main] o.s.c.openfeign.FeignClientFactoryBean   : For 'cart-service' URL not provided. Will try picking an instance via load-balancing.
+2026-01-16T17:13:19.428+06:00  INFO 25880 --- [order-service] [           main] o.s.c.openfeign.FeignClientFactoryBean   : For 'inventory-service' URL not provided. Will try picking an instance via load-balancing.
+2026-01-16T17:13:19.466+06:00  INFO 25880 --- [order-service] [           main] o.s.c.openfeign.FeignClientFactoryBean   : For 'user-service' URL not provided. Will try picking an instance via load-balancing.
+2026-01-16T17:13:21.335+06:00  INFO 25880 --- [order-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-01-16T17:13:21.403+06:00  WARN 25880 --- [order-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-01-16T17:13:21.432+06:00  INFO 25880 --- [order-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-01-16T17:13:21.542+06:00  INFO 25880 --- [order-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-01-16T17:13:21.579+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-01-16T17:13:21.586+06:00  INFO 25880 --- [order-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-01-16T17:13:21.596+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-01-16T17:13:21.596+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-01-16T17:13:21.597+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-01-16T17:13:21.597+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-01-16T17:13:21.598+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-01-16T17:13:21.598+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-01-16T17:13:21.599+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-01-16T17:13:21.955+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-01-16T17:13:21.958+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-01-16T17:13:21.961+06:00  INFO 25880 --- [order-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-01-16T17:13:21.963+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1768562001963 with initial instances count: 0
+2026-01-16T17:13:21.971+06:00  INFO 25880 --- [order-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application ORDER-SERVICE with eureka with status UP
+2026-01-16T17:13:21.972+06:00  INFO 25880 --- [order-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1768562001972, current=UP, previous=STARTING]
+2026-01-16T17:13:21.974+06:00  INFO 25880 --- [order-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_ORDER-SERVICE/DESKTOP-75B4A1I.mshome.net:order-service:8086: registering service...
+2026-01-16T17:13:21.993+06:00  INFO 25880 --- [order-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8086 (http) with context path '/'
+2026-01-16T17:13:21.994+06:00  INFO 25880 --- [order-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8086
+2026-01-16T17:13:22.018+06:00  INFO 25880 --- [order-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_ORDER-SERVICE/DESKTOP-75B4A1I.mshome.net:order-service:8086 - registration status: 204
+2026-01-16T17:13:22.018+06:00  INFO 25880 --- [order-service] [           main] o.e.m.order.OrderServiceApplication      : Started OrderServiceApplication in 15.416 seconds (process running for 17.199)
+2026-01-16T17:13:51.966+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-01-16T17:13:51.967+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-01-16T17:13:51.967+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-01-16T17:13:51.967+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-01-16T17:13:51.967+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-01-16T17:13:51.968+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-01-16T17:13:51.968+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-01-16T17:13:51.988+06:00  INFO 25880 --- [order-service] [reshExecutor-%d] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-01-16T17:18:21.607+06:00  INFO 25880 --- [order-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-01-16T17:23:21.611+06:00  INFO 25880 --- [order-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-01-16T17:28:21.622+06:00  INFO 25880 --- [order-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

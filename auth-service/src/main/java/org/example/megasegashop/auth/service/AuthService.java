@@ -54,7 +54,8 @@ public class AuthService {
                         savedUser.getId(),
                         savedUser.getEmail(),
                         request.firstName(),
-                        request.lastName()
+                        request.lastName(),
+                        request.phone()
                 )
         );
         savedUser.setProfileId(profile.id());

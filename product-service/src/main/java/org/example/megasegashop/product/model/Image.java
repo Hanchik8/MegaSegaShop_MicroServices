@@ -24,7 +24,7 @@ public class Image {
     @Lob
     @JsonIgnore
     private Blob image;
-    private String donwloadUrl;
+    private String downloadUrl;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

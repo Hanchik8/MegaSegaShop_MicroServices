@@ -1,0 +1,123 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< org.example:discovery-server >--------------------
+[INFO] Building discovery-server 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.6:run (default-cli) > test-compile @ discovery-server >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ discovery-server ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ discovery-server ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ discovery-server ---
+[INFO] skip non existing resourceDirectory C:\Users\ProBook\Desktop\MegaSegaShop\discovery-server\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ discovery-server ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.6:run (default-cli) < test-compile @ discovery-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.6:run (default-cli) @ discovery-server ---
+[INFO] Attaching agents: []
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.6)
+
+2026-01-16T17:12:39.339+06:00  INFO 19116 --- [discovery-server] [           main] o.e.m.d.DiscoveryServerApplication       : Starting DiscoveryServerApplication using Java 21.0.9 with PID 19116 (C:\Users\ProBook\Desktop\MegaSegaShop\discovery-server\target\classes started by ProBook in C:\Users\ProBook\Desktop\MegaSegaShop\discovery-server)
+2026-01-16T17:12:39.342+06:00  INFO 19116 --- [discovery-server] [           main] o.e.m.d.DiscoveryServerApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T17:12:39.386+06:00  INFO 19116 --- [discovery-server] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://localhost:8888
+2026-01-16T17:12:39.387+06:00  INFO 19116 --- [discovery-server] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=discovery-server, profiles=[default], label=null, version=null, state=null
+2026-01-16T17:12:40.195+06:00  INFO 19116 --- [discovery-server] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=7d6fd973-56c3-3037-b09a-4fdfe8a2f5f0
+2026-01-16T17:12:40.465+06:00  INFO 19116 --- [discovery-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8761 (http)
+2026-01-16T17:12:40.477+06:00  INFO 19116 --- [discovery-server] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T17:12:40.478+06:00  INFO 19116 --- [discovery-server] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+2026-01-16T17:12:40.544+06:00  INFO 19116 --- [discovery-server] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T17:12:40.546+06:00  INFO 19116 --- [discovery-server] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1156 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-01-16T17:12:41.359+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-01-16T17:12:41.364+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-01-16T17:12:41.504+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-01-16T17:12:41.507+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-01-16T17:12:42.174+06:00  WARN 19116 --- [discovery-server] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-01-16T17:12:42.219+06:00  INFO 19116 --- [discovery-server] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-01-16T17:12:42.235+06:00  INFO 19116 --- [discovery-server] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-01-16T17:12:42.236+06:00  INFO 19116 --- [discovery-server] [           main] com.netflix.discovery.DiscoveryClient    : Client configured to neither register nor query for data.
+2026-01-16T17:12:42.237+06:00  INFO 19116 --- [discovery-server] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1768561962237 with initial instances count: 0
+2026-01-16T17:12:42.268+06:00  INFO 19116 --- [discovery-server] [           main] c.n.eureka.DefaultEurekaServerContext    : Initializing ...
+2026-01-16T17:12:42.270+06:00  INFO 19116 --- [discovery-server] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Adding new peer nodes [http://localhost:8761/eureka/]
+2026-01-16T17:12:42.364+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-01-16T17:12:42.364+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-01-16T17:12:42.364+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-01-16T17:12:42.366+06:00  INFO 19116 --- [discovery-server] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-01-16T17:12:42.396+06:00  INFO 19116 --- [discovery-server] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Replica node URL:  http://localhost:8761/eureka/
+2026-01-16T17:12:42.403+06:00  INFO 19116 --- [discovery-server] [           main] c.n.e.registry.AbstractInstanceRegistry  : Finished initializing remote region registries. All known remote regions: []
+2026-01-16T17:12:42.404+06:00  INFO 19116 --- [discovery-server] [           main] c.n.eureka.DefaultEurekaServerContext    : Initialized
+2026-01-16T17:12:42.417+06:00  INFO 19116 --- [discovery-server] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-01-16T17:12:42.456+06:00  INFO 19116 --- [discovery-server] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application DISCOVERY-SERVER with eureka with status UP
+2026-01-16T17:12:42.467+06:00  INFO 19116 --- [discovery-server] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : isAws returned false
+2026-01-16T17:12:42.467+06:00  INFO 19116 --- [discovery-server] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : Initialized server context
+2026-01-16T17:12:42.467+06:00  INFO 19116 --- [discovery-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Got 1 instances from neighboring DS node
+2026-01-16T17:12:42.468+06:00  INFO 19116 --- [discovery-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Renew threshold is: 1
+2026-01-16T17:12:42.469+06:00  INFO 19116 --- [discovery-server] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Changing status to UP
+2026-01-16T17:12:42.470+06:00  INFO 19116 --- [discovery-server] [       Thread-9] e.s.EurekaServerInitializerConfiguration : Started Eureka Server
+2026-01-16T17:12:42.473+06:00  INFO 19116 --- [discovery-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8761 (http) with context path '/'
+2026-01-16T17:12:42.475+06:00  INFO 19116 --- [discovery-server] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8761
+2026-01-16T17:12:42.493+06:00  INFO 19116 --- [discovery-server] [           main] o.e.m.d.DiscoveryServerApplication       : Started DiscoveryServerApplication in 4.152 seconds (process running for 4.516)
+2026-01-16T17:13:16.119+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T17:13:16.119+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T17:13:16.122+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-16T17:13:16.454+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-4] c.n.e.registry.AbstractInstanceRegistry  : Registered instance API-GATEWAY/DESKTOP-75B4A1I.mshome.net:api-gateway:8080 with status UP (replication=false)
+2026-01-16T17:13:16.454+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 with status UP (replication=false)
+2026-01-16T17:13:16.474+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 with status DOWN (replication=false)
+2026-01-16T17:13:16.495+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-7] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 (replication=false)
+2026-01-16T17:13:17.352+06:00  INFO 19116 --- [discovery-server] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Registered instance API-GATEWAY/DESKTOP-75B4A1I.mshome.net:api-gateway:8080 with status UP (replication=true)
+2026-01-16T17:13:17.353+06:00  INFO 19116 --- [discovery-server] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Registered instance NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 with status DOWN (replication=true)
+2026-01-16T17:13:17.354+06:00  INFO 19116 --- [discovery-server] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 (replication=true)
+2026-01-16T17:13:21.383+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-2] c.n.e.registry.AbstractInstanceRegistry  : Registered instance USER-SERVICE/DESKTOP-75B4A1I.mshome.net:user-service:8082 with status UP (replication=false)
+2026-01-16T17:13:21.642+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CART-SERVICE/DESKTOP-75B4A1I.mshome.net:cart-service:8084 with status UP (replication=false)
+2026-01-16T17:13:21.717+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085 with status UP (replication=false)
+2026-01-16T17:13:21.788+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-7] c.n.e.registry.AbstractInstanceRegistry  : Registered instance INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085 with status DOWN (replication=false)
+2026-01-16T17:13:21.890+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance USER-SERVICE/DESKTOP-75B4A1I.mshome.net:user-service:8082 with status UP (replication=true)
+2026-01-16T17:13:21.891+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance CART-SERVICE/DESKTOP-75B4A1I.mshome.net:cart-service:8084 with status UP (replication=true)
+2026-01-16T17:13:21.892+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-9] c.n.e.registry.AbstractInstanceRegistry  : Registered instance INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085 with status DOWN (replication=true)
+2026-01-16T17:13:21.960+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-1] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/DESKTOP-75B4A1I.mshome.net:auth-service:8081 with status UP (replication=false)
+2026-01-16T17:13:22.015+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-2] c.n.e.registry.AbstractInstanceRegistry  : Registered instance ORDER-SERVICE/DESKTOP-75B4A1I.mshome.net:order-service:8086 with status UP (replication=false)
+2026-01-16T17:13:22.466+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/DESKTOP-75B4A1I.mshome.net:auth-service:8081 with status UP (replication=true)
+2026-01-16T17:13:22.467+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance ORDER-SERVICE/DESKTOP-75B4A1I.mshome.net:order-service:8086 with status UP (replication=true)
+2026-01-16T17:13:22.652+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRODUCT-SERVICE/DESKTOP-75B4A1I.mshome.net:product-service:8083 with status UP (replication=false)
+2026-01-16T17:13:23.162+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-6] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRODUCT-SERVICE/DESKTOP-75B4A1I.mshome.net:product-service:8083 with status UP (replication=true)
+2026-01-16T17:13:24.830+06:00  INFO 19116 --- [discovery-server] [nio-8761-exec-7] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085 (replication=false)
+2026-01-16T17:13:25.356+06:00  WARN 19116 --- [discovery-server] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: cancel failed because Lease is not registered for: INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085
+2026-01-16T17:13:25.357+06:00  INFO 19116 --- [discovery-server] [io-8761-exec-10] c.n.eureka.resources.InstanceResource    : Not Found (Cancel): INVENTORY-SERVICE - DESKTOP-75B4A1I.mshome.net:inventory-service:8085
+2026-01-16T17:13:25.358+06:00  WARN 19116 --- [discovery-server] [et_localhost-13] c.n.eureka.cluster.ReplicationTask       : The replication of task INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085:Cancel@localhost failed with response code 404
+2026-01-16T17:13:25.360+06:00  WARN 19116 --- [discovery-server] [et_localhost-13] c.netflix.eureka.cluster.PeerEurekaNode  : INVENTORY-SERVICE/DESKTOP-75B4A1I.mshome.net:inventory-service:8085:Cancel@localhost: missing entry.
+2026-01-16T17:13:42.480+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-01-16T17:14:42.482+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-01-16T17:15:42.483+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-01-16T17:16:42.484+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-01-16T17:17:42.486+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-01-16T17:18:42.489+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-01-16T17:19:42.495+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-01-16T17:20:42.495+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-01-16T17:21:42.511+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 15ms
+2026-01-16T17:22:42.513+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-01-16T17:23:42.515+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-01-16T17:24:42.520+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-01-16T17:25:42.521+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-01-16T17:26:42.521+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-01-16T17:27:42.405+06:00  INFO 19116 --- [discovery-server] [hresholdUpdater] c.n.e.r.PeerAwareInstanceRegistryImpl    : Current renewal threshold is : 11
+2026-01-16T17:27:42.527+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-01-16T17:28:42.533+06:00  INFO 19116 --- [discovery-server] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms

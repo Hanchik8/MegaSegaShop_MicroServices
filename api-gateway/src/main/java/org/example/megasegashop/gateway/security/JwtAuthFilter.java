@@ -24,7 +24,8 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-        if (isPublicPath(path) || isPublicProductRead(exchange) || isPublicUiPath(exchange, path)) {
+        if (isPublicPath(path) || isPublicProductRead(exchange) || isPublicImageRead(exchange)
+                || isPublicUiPath(exchange, path)) {
             return chain.filter(exchange);
         }
 
@@ -68,6 +69,11 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     private boolean isPublicProductRead(ServerWebExchange exchange) {
         return exchange.getRequest().getMethod() == HttpMethod.GET
                 && exchange.getRequest().getURI().getPath().startsWith("/api/products");
+    }
+
+    private boolean isPublicImageRead(ServerWebExchange exchange) {
+        return exchange.getRequest().getMethod() == HttpMethod.GET
+                && exchange.getRequest().getURI().getPath().startsWith("/api/images");
     }
 
     private boolean isPublicUiPath(ServerWebExchange exchange, String path) {

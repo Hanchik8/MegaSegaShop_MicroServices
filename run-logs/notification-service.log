@@ -1,0 +1,132 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< org.example:notification-service >------------------
+[INFO] Building notification-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.6:run (default-cli) > test-compile @ notification-service >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ notification-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ notification-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ notification-service ---
+[INFO] skip non existing resourceDirectory C:\Users\ProBook\Desktop\MegaSegaShop\notification-service\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ notification-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.6:run (default-cli) < test-compile @ notification-service <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.6:run (default-cli) @ notification-service ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.6)
+
+2026-01-16T17:13:10.297+06:00  INFO 6716 --- [notification-service] [           main] o.e.m.n.NotificationServiceApplication   : Starting NotificationServiceApplication using Java 21.0.9 with PID 6716 (C:\Users\ProBook\Desktop\MegaSegaShop\notification-service\target\classes started by ProBook in C:\Users\ProBook\Desktop\MegaSegaShop\notification-service)
+2026-01-16T17:13:10.301+06:00  INFO 6716 --- [notification-service] [           main] o.e.m.n.NotificationServiceApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T17:13:10.408+06:00  INFO 6716 --- [notification-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://localhost:8888
+2026-01-16T17:13:10.439+06:00  INFO 6716 --- [notification-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=notification-service, profiles=[default], label=null, version=null, state=null
+2026-01-16T17:13:12.921+06:00  INFO 6716 --- [notification-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=1a37be52-6b92-323a-aaff-1245fd560db0
+2026-01-16T17:13:13.474+06:00  INFO 6716 --- [notification-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8087 (http)
+2026-01-16T17:13:13.504+06:00  INFO 6716 --- [notification-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T17:13:13.505+06:00  INFO 6716 --- [notification-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+2026-01-16T17:13:13.643+06:00  INFO 6716 --- [notification-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T17:13:13.644+06:00  INFO 6716 --- [notification-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3182 ms
+2026-01-16T17:13:15.717+06:00  INFO 6716 --- [notification-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-01-16T17:13:15.792+06:00  WARN 6716 --- [notification-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-01-16T17:13:15.809+06:00  INFO 6716 --- [notification-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-01-16T17:13:15.947+06:00  INFO 6716 --- [notification-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-01-16T17:13:15.985+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-01-16T17:13:15.993+06:00  INFO 6716 --- [notification-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-01-16T17:13:16.007+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-01-16T17:13:16.009+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-01-16T17:13:16.009+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-01-16T17:13:16.009+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-01-16T17:13:16.010+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-01-16T17:13:16.010+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-01-16T17:13:16.010+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-01-16T17:13:16.294+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-01-16T17:13:16.297+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-01-16T17:13:16.299+06:00  INFO 6716 --- [notification-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-01-16T17:13:16.301+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1768561996301 with initial instances count: 0
+2026-01-16T17:13:16.307+06:00  INFO 6716 --- [notification-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application NOTIFICATION-SERVICE with eureka with status UP
+2026-01-16T17:13:16.309+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1768561996309, current=UP, previous=STARTING]
+2026-01-16T17:13:16.310+06:00  INFO 6716 --- [notification-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087: registering service...
+2026-01-16T17:13:16.344+06:00  INFO 6716 --- [notification-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8087 (http) with context path '/'
+2026-01-16T17:13:16.346+06:00  INFO 6716 --- [notification-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8087
+2026-01-16T17:13:16.464+06:00  INFO 6716 --- [notification-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 - registration status: 204
+2026-01-16T17:13:16.467+06:00  INFO 6716 --- [notification-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application NOTIFICATION-SERVICE with eureka with status DOWN
+2026-01-16T17:13:16.468+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1768561996468, current=DOWN, previous=UP]
+2026-01-16T17:13:16.468+06:00  INFO 6716 --- [notification-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087: registering service...
+2026-01-16T17:13:16.469+06:00  WARN 6716 --- [notification-service] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'org.springframework.kafka.config.internalKafkaListenerEndpointRegistry'
+2026-01-16T17:13:16.477+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...
+2026-01-16T17:13:16.477+06:00  INFO 6716 --- [notification-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 - registration status: 204
+2026-01-16T17:13:16.478+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Unregistering ...
+2026-01-16T17:13:16.504+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_NOTIFICATION-SERVICE/DESKTOP-75B4A1I.mshome.net:notification-service:8087 - deregister  status: 200
+2026-01-16T17:13:16.505+06:00  INFO 6716 --- [notification-service] [           main] com.netflix.discovery.DiscoveryClient    : Completed shut down of DiscoveryClient
+2026-01-16T17:13:16.534+06:00  INFO 6716 --- [notification-service] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-01-16T17:13:16.563+06:00 ERROR 6716 --- [notification-service] [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Failed to start bean 'org.springframework.kafka.config.internalKafkaListenerEndpointRegistry'
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:288) ~[spring-context-6.1.15.jar:6.1.15]
+	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:472) ~[spring-context-6.1.15.jar:6.1.15]
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:257) ~[spring-context-6.1.15.jar:6.1.15]
+	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:202) ~[spring-context-6.1.15.jar:6.1.15]
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:990) ~[spring-context-6.1.15.jar:6.1.15]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628) ~[spring-context-6.1.15.jar:6.1.15]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352) ~[spring-boot-3.3.6.jar:3.3.6]
+	at org.example.megasegashop.notification.NotificationServiceApplication.main(NotificationServiceApplication.java:10) ~[classes/:na]
+Caused by: java.lang.IllegalStateException: JsonDeserializer must be configured with property setters, or via configuration properties; not both
+	at org.springframework.util.Assert.state(Assert.java:76) ~[spring-core-6.1.15.jar:6.1.15]
+	at org.springframework.kafka.support.serializer.JsonDeserializer.configure(JsonDeserializer.java:404) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.lambda$valueDeserializerSupplier$9(DefaultKafkaConsumerFactory.java:203) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory$ExtendedKafkaConsumer.<init>(DefaultKafkaConsumerFactory.java:508) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createRawConsumer(DefaultKafkaConsumerFactory.java:485) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createKafkaConsumer(DefaultKafkaConsumerFactory.java:462) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createConsumerWithAdjustedProperties(DefaultKafkaConsumerFactory.java:439) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createKafkaConsumer(DefaultKafkaConsumerFactory.java:406) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createConsumer(DefaultKafkaConsumerFactory.java:367) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.<init>(KafkaMessageListenerContainer.java:865) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.listener.KafkaMessageListenerContainer.doStart(KafkaMessageListenerContainer.java:378) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.listener.AbstractMessageListenerContainer.start(AbstractMessageListenerContainer.java:519) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.listener.ConcurrentMessageListenerContainer.doStart(ConcurrentMessageListenerContainer.java:255) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.listener.AbstractMessageListenerContainer.start(AbstractMessageListenerContainer.java:519) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.config.KafkaListenerEndpointRegistry.startIfNecessary(KafkaListenerEndpointRegistry.java:436) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.kafka.config.KafkaListenerEndpointRegistry.start(KafkaListenerEndpointRegistry.java:382) ~[spring-kafka-3.2.5.jar:3.2.5]
+	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:285) ~[spring-context-6.1.15.jar:6.1.15]
+	... 13 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  22.961 s
+[INFO] Finished at: 2026-01-16T17:13:16+06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.3.6:run (default-cli) on project notification-service: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

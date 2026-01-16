@@ -38,16 +38,39 @@ public class ProductDataSeeder implements CommandLineRunner {
         Category games = categoryRepository.save(new Category(null, "Games", null));
         Category accessories = categoryRepository.save(new Category(null, "Accessories", null));
 
-        List<Product> products = List.of(
-                new Product(null, "MegaSega Classic", "MegaSega", "Retro console bundle", new BigDecimal("129.99"), 15, consoles, new ArrayList<>()),
-                new Product(null, "Sega Legend", "MegaSega", "Collector edition console", new BigDecimal("199.99"), 8, consoles, new ArrayList<>()),
-                new Product(null, "Galaxy Racer", "SegaWorks", "Arcade racing game", new BigDecimal("39.99"), 120, games, new ArrayList<>()),
-                new Product(null, "Fantasy Quest", "SegaWorks", "Adventure RPG", new BigDecimal("49.99"), 90, games, new ArrayList<>()),
-                new Product(null, "Pro Controller", "MegaSega", "Wireless controller", new BigDecimal("59.99"), 40, accessories, new ArrayList<>())
+        List<SeedProduct> products = List.of(
+                new SeedProduct(
+                        new Product(null, "MegaSega Classic", "MegaSega", "Retro console bundle",
+                                new BigDecimal("129.99"), consoles, new ArrayList<>()),
+                        15
+                ),
+                new SeedProduct(
+                        new Product(null, "Sega Legend", "MegaSega", "Collector edition console",
+                                new BigDecimal("199.99"), consoles, new ArrayList<>()),
+                        8
+                ),
+                new SeedProduct(
+                        new Product(null, "Galaxy Racer", "SegaWorks", "Arcade racing game",
+                                new BigDecimal("39.99"), games, new ArrayList<>()),
+                        120
+                ),
+                new SeedProduct(
+                        new Product(null, "Fantasy Quest", "SegaWorks", "Adventure RPG",
+                                new BigDecimal("49.99"), games, new ArrayList<>()),
+                        90
+                ),
+                new SeedProduct(
+                        new Product(null, "Pro Controller", "MegaSega", "Wireless controller",
+                                new BigDecimal("59.99"), accessories, new ArrayList<>()),
+                        40
+                )
         );
 
-        for (Product product : products) {
-            productService.addProduct(product);
+        for (SeedProduct seedProduct : products) {
+            productService.addProduct(seedProduct.product(), seedProduct.initialQuantity());
         }
+    }
+
+    private record SeedProduct(Product product, int initialQuantity) {
     }
 }

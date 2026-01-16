@@ -2,6 +2,7 @@ package org.example.megasegashop.order.service;
 
 import org.example.megasegashop.order.client.CartClient;
 import org.example.megasegashop.order.client.InventoryClient;
+import org.example.megasegashop.order.client.UserProfileClient;
 import org.example.megasegashop.order.dto.CartItemSnapshot;
 import org.example.megasegashop.order.dto.CartSnapshot;
 import org.example.megasegashop.order.dto.InventoryItemRequest;
@@ -10,8 +11,11 @@ import org.example.megasegashop.order.dto.InventoryReserveResponse;
 import org.example.megasegashop.order.dto.OrderItemResponse;
 import org.example.megasegashop.order.dto.OrderResponse;
 import org.example.megasegashop.order.dto.PlaceOrderRequest;
+import org.example.megasegashop.order.dto.UserProfileSnapshot;
+import org.example.megasegashop.order.entity.OrderStatus;
 import org.example.megasegashop.order.entity.Order;
 import org.example.megasegashop.order.entity.OrderItem;
+import org.example.megasegashop.order.event.OrderCancelledEvent;
 import org.example.megasegashop.order.event.OrderPlacedEvent;
 import org.example.megasegashop.order.repository.OrderRepository;
 import org.slf4j.Logger;
@@ -30,22 +34,29 @@ import java.util.List;
 public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private static final String ORDER_PLACED_TOPIC = "order.placed";
+    private static final String ORDER_CANCELLED_TOPIC = "order.cancelled";
 
     private final CartClient cartClient;
     private final InventoryClient inventoryClient;
+    private final UserProfileClient userProfileClient;
     private final OrderRepository orderRepository;
-    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+    private final KafkaTemplate<String, OrderPlacedEvent> orderPlacedKafkaTemplate;
+    private final KafkaTemplate<String, OrderCancelledEvent> orderCancelledKafkaTemplate;
 
     public OrderService(
             CartClient cartClient,
             InventoryClient inventoryClient,
+            UserProfileClient userProfileClient,
             OrderRepository orderRepository,
-            KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate
+            KafkaTemplate<String, OrderPlacedEvent> orderPlacedKafkaTemplate,
+            KafkaTemplate<String, OrderCancelledEvent> orderCancelledKafkaTemplate
     ) {
         this.cartClient = cartClient;
         this.inventoryClient = inventoryClient;
+        this.userProfileClient = userProfileClient;
         this.orderRepository = orderRepository;
-        this.kafkaTemplate = kafkaTemplate;
+        this.orderPlacedKafkaTemplate = orderPlacedKafkaTemplate;
+        this.orderCancelledKafkaTemplate = orderCancelledKafkaTemplate;
     }
 
     /**
@@ -62,6 +73,8 @@ public class OrderService {
      */
     @Transactional
     public OrderResponse placeOrder(PlaceOrderRequest request) {
+        String phone = resolvePhone(request.userId());
+
         // Step 1: Get cart
         CartSnapshot cart = cartClient.getCart(request.userId());
         if (cart == null || cart.items() == null || cart.items().isEmpty()) {
@@ -91,8 +104,8 @@ public class OrderService {
 
             // Step 4: Send Kafka event (async, but we catch exceptions)
             try {
-                kafkaTemplate.send(ORDER_PLACED_TOPIC, 
-                        new OrderPlacedEvent(saved.getId(), request.email(), saved.getTotalAmount()))
+                orderPlacedKafkaTemplate.send(ORDER_PLACED_TOPIC, 
+                        new OrderPlacedEvent(saved.getId(), request.email(), phone, saved.getTotalAmount()))
                         .get(); // Wait for confirmation
             } catch (Exception kafkaEx) {
                 logger.error("Failed to send Kafka event for order {}: {}", saved.getId(), kafkaEx.getMessage());
@@ -137,7 +150,7 @@ public class OrderService {
         Order order = new Order();
         order.setUserId(request.userId());
         order.setEmail(request.email());
-        order.setStatus("PLACED");
+        order.setStatus(OrderStatus.PLACED);
         order.setItems(new ArrayList<>());
 
         BigDecimal total = BigDecimal.ZERO;
@@ -158,10 +171,88 @@ public class OrderService {
         return order;
     }
 
+    private String resolvePhone(Long userId) {
+        try {
+            UserProfileSnapshot profile = userProfileClient.getByAuthUserId(userId);
+            if (profile != null && profile.phone() != null && !profile.phone().isBlank()) {
+                return profile.phone();
+            }
+        } catch (Exception ex) {
+            logger.warn("Unable to resolve phone for user {}: {}", userId, ex.getMessage());
+        }
+        return null;
+    }
+
     public OrderResponse getOrder(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
         return toResponse(order);
+    }
+
+    public List<OrderResponse> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public OrderResponse updateStatus(Long orderId, OrderStatus newStatus) {
+        if (newStatus == OrderStatus.CANCELLED) {
+            return cancelOrder(orderId);
+        }
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order is cancelled");
+        }
+
+        order.setStatus(newStatus);
+        Order saved = orderRepository.save(order);
+        return toResponse(saved);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            return toResponse(order);
+        }
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Delivered orders cannot be cancelled");
+        }
+
+        InventoryReserveRequest releaseRequest = buildInventoryReleaseRequest(order);
+        try {
+            inventoryClient.release(releaseRequest);
+        } catch (Exception ex) {
+            logger.error("Failed to release inventory for order {}: {}", orderId, ex.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Inventory service unavailable");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        Order saved = orderRepository.save(order);
+
+        try {
+            String phone = resolvePhone(saved.getUserId());
+            orderCancelledKafkaTemplate.send(
+                    ORDER_CANCELLED_TOPIC,
+                    new OrderCancelledEvent(
+                            saved.getId(),
+                            saved.getUserId(),
+                            saved.getEmail(),
+                            phone,
+                            saved.getTotalAmount()
+                    )
+            ).get();
+        } catch (Exception kafkaEx) {
+            logger.error("Failed to send order cancellation event for order {}: {}", saved.getId(), kafkaEx.getMessage());
+        }
+
+        return toResponse(saved);
     }
 
     private OrderResponse toResponse(Order order) {
@@ -174,5 +265,12 @@ public class OrderService {
                 ))
                 .toList();
         return new OrderResponse(order.getId(), order.getStatus(), order.getTotalAmount(), order.getCreatedAt(), items);
+    }
+
+    private InventoryReserveRequest buildInventoryReleaseRequest(Order order) {
+        List<InventoryItemRequest> items = order.getItems().stream()
+                .map(item -> new InventoryItemRequest(item.getProductId(), item.getQuantity()))
+                .toList();
+        return new InventoryReserveRequest(items);
     }
 }

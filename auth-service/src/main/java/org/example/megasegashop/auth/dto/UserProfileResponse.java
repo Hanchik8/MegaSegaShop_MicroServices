@@ -5,6 +5,7 @@ public record UserProfileResponse(
         Long authUserId,
         String email,
         String firstName,
-        String lastName
+        String lastName,
+        String phone
 ) {
 }

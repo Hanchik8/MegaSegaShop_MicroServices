@@ -37,6 +37,9 @@ public class UserProfile {
     @Column(nullable = false)
     private String lastName;
 
+    @Column
+    private String phone;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 

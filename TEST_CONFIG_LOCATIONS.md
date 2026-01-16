@@ -1,0 +1,9 @@
+# Test Config Locations
+
+- api-gateway/src/test/resources/application.yml: `spring.config.import=optional:configserver:http://localhost:8888`, `security.jwt.secret=test-secret-012345678901234567890123456789`
+- auth-service/src/test/resources/application.yml: `spring.config.import=optional:configserver:http://localhost:8888`, `spring.datasource.url=jdbc:h2:mem:auth_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`, `spring.datasource.username=sa`, `spring.datasource.password=""`, `spring.datasource.driver-class-name=org.h2.Driver`, `spring.jpa.database-platform=org.hibernate.dialect.H2Dialect`, `spring.jpa.hibernate.ddl-auto=create-drop`, `security.jwt.secret=test-secret-012345678901234567890123456789`, `security.jwt.expiration-minutes=60`
+- auth-service/pom.xml: test dependency `com.h2database:h2`
+- user-service/src/test/resources/application.yml: `spring.config.import=optional:configserver:http://localhost:8888`, `spring.datasource.url=jdbc:h2:mem:user_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`, `spring.datasource.username=sa`, `spring.datasource.password=""`, `spring.datasource.driver-class-name=org.h2.Driver`, `spring.jpa.database-platform=org.hibernate.dialect.H2Dialect`, `spring.jpa.hibernate.ddl-auto=create-drop`
+- user-service/pom.xml: test dependency `com.h2database:h2`
+- product-service/src/test/resources/application.yml: `spring.config.import=optional:configserver:http://localhost:8888`, `spring.datasource.url=jdbc:h2:mem:product_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`, `spring.datasource.username=sa`, `spring.datasource.password=""`, `spring.datasource.driver-class-name=org.h2.Driver`, `spring.jpa.database-platform=org.hibernate.dialect.H2Dialect`, `spring.jpa.hibernate.ddl-auto=create-drop`
+- product-service/pom.xml: test dependency `com.h2database:h2`

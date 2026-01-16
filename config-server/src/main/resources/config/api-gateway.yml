@@ -28,6 +28,12 @@ spring:
             - Path=/api/products/**
           filters:
             - StripPrefix=1
+        - id: product-images
+          uri: lb://product-service
+          predicates:
+            - Path=/api/images/**
+          filters:
+            - StripPrefix=1
         - id: cart-service
           uri: lb://cart-service
           predicates:

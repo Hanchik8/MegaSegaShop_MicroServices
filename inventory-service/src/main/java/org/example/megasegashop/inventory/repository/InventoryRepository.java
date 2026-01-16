@@ -12,4 +12,6 @@ public interface InventoryRepository extends JpaRepository<InventoryItem, Long> 
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<InventoryItem> findWithLockByProductId(Long productId);
+
+    void deleteByProductId(Long productId);
 }

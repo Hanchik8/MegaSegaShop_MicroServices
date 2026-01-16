@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: notification-service
+  mail:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${SMTP_AUTH:true}
+      mail.smtp.starttls.enable: ${SMTP_STARTTLS:true}
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -14,6 +22,24 @@ spring:
     properties:
       spring.json.trusted.packages: org.example.megasegashop.notification.event
       spring.json.value.default.type: org.example.megasegashop.notification.event.OrderPlacedEvent
+
+notification:
+  email:
+    enabled: ${NOTIFICATION_EMAIL_ENABLED:false}
+    from: ${NOTIFICATION_EMAIL_FROM:no-reply@megasega.local}
+    subject-template: ${NOTIFICATION_EMAIL_SUBJECT_TEMPLATE:Your MegaSega order %s is placed}
+  webhook:
+    enabled: ${NOTIFICATION_WEBHOOK_ENABLED:false}
+    url: ${NOTIFICATION_WEBHOOK_URL:}
+    secret: ${NOTIFICATION_WEBHOOK_SECRET:}
+  sms:
+    enabled: ${NOTIFICATION_SMS_ENABLED:false}
+    url: ${NOTIFICATION_SMS_URL:}
+    api-key: ${NOTIFICATION_SMS_API_KEY:}
+    api-key-header: ${NOTIFICATION_SMS_API_KEY_HEADER:Authorization}
+    api-key-prefix: ${NOTIFICATION_SMS_API_KEY_PREFIX:Bearer}
+    from: ${NOTIFICATION_SMS_FROM:MegaSega}
+    default-recipient: ${NOTIFICATION_SMS_DEFAULT_RECIPIENT:}
 
 eureka:
   client:

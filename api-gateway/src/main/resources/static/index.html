@@ -25,10 +25,16 @@
         </div>
         <nav class="nav">
           <a href="#catalog">Catalog</a>
-          <a href="#story">Story</a>
+          <a href="#account">Account</a>
+          <a href="#cart">Cart</a>
+          <a href="#checkout">Checkout</a>
+          <a href="#admin">Admin</a>
           <a href="#ops">Ops</a>
         </nav>
-        <a class="cta-button" href="#catalog">Browse now</a>
+        <div class="header-actions">
+          <div class="cart-pill">Cart <span id="cartCount">0</span></div>
+          <a class="cta-button" href="#catalog">Browse now</a>
+        </div>
       </header>
 
       <main>
@@ -102,7 +108,10 @@
 
           <div class="catalog-meta">
             <div id="catalogCount">Loading products...</div>
-            <div id="catalogStatus" class="status-pill">Contacting product-service</div>
+            <div class="catalog-actions">
+              <div id="catalogStatus" class="status-pill">Contacting product-service</div>
+              <button id="catalogReloadButton" class="button ghost small" type="button">Retry</button>
+            </div>
           </div>
 
           <div id="productGrid" class="product-grid loading">
@@ -126,16 +135,231 @@
               <div class="skeleton-line wide"></div>
               <div class="skeleton-line"></div>
             </article>
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
-            </article>
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
-            </article>
+          </div>
+        </section>
+
+        <section class="account" id="account">
+          <div class="section-head">
+            <div>
+              <h2>Account access</h2>
+              <p>Register or sign in to unlock cart and checkout actions.</p>
+            </div>
+            <div class="auth-switch">
+              <button class="tab active" data-mode="login" type="button">Login</button>
+              <button class="tab" data-mode="register" type="button">Register</button>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="card">
+              <form id="loginForm" class="form-grid">
+                <h3>Sign in</h3>
+                <label class="field">
+                  Email
+                  <input id="loginEmail" type="email" required />
+                </label>
+                <label class="field">
+                  Password
+                  <input id="loginPassword" type="password" required />
+                </label>
+                <button class="button primary" type="submit">Login</button>
+              </form>
+
+              <form id="registerForm" class="form-grid hidden">
+                <h3>Create account</h3>
+                <div class="two-col">
+                  <label class="field">
+                    First name
+                    <input id="registerFirstName" type="text" required />
+                  </label>
+                  <label class="field">
+                    Last name
+                    <input id="registerLastName" type="text" required />
+                  </label>
+                </div>
+                <label class="field">
+                  Email
+                  <input id="registerEmail" type="email" required />
+                </label>
+                <label class="field">
+                  Phone (optional)
+                  <input id="registerPhone" type="tel" placeholder="+1 555 555 0123" />
+                </label>
+                <label class="field">
+                  Password
+                  <input id="registerPassword" type="password" required />
+                </label>
+                <button class="button primary" type="submit">Register</button>
+              </form>
+              <div id="authMessage" class="message"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Session</h3>
+                <button id="signOutButton" class="button ghost" type="button">Sign out</button>
+              </div>
+              <div class="session-grid">
+                <div>
+                  <span>Status</span>
+                  <strong id="sessionStatus">Signed out</strong>
+                </div>
+                <div>
+                  <span>User ID</span>
+                  <strong id="sessionUserId">-</strong>
+                </div>
+                <div>
+                  <span>Profile ID</span>
+                  <strong id="sessionProfileId">-</strong>
+                </div>
+                <div>
+                  <span>Email</span>
+                  <strong id="sessionEmail">-</strong>
+                </div>
+                <div>
+                  <span>Phone</span>
+                  <strong id="sessionPhone">-</strong>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button id="refreshProfileButton" class="button secondary" type="button">Refresh profile</button>
+              </div>
+              <div id="profileInfo" class="message"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cart" id="cart">
+          <div class="section-head">
+            <div>
+              <h2>Cart</h2>
+              <p>Live cart powered by cart-service and product-service.</p>
+            </div>
+            <div class="inline-actions">
+              <button id="cartRefreshButton" class="button secondary" type="button">Refresh</button>
+              <button id="cartClearButton" class="button ghost" type="button">Clear cart</button>
+            </div>
+          </div>
+          <div class="section-grid cart-grid">
+            <div class="card">
+              <div id="cartItems" class="list">Sign in to see your cart.</div>
+              <div id="cartMessage" class="message"></div>
+            </div>
+            <div class="card summary">
+              <h3>Summary</h3>
+              <div class="summary-row">
+                <span>Total</span>
+                <strong id="cartTotal">$0.00</strong>
+              </div>
+              <a class="button primary" href="#checkout">Proceed to checkout</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="checkout" id="checkout">
+          <div class="section-head">
+            <div>
+              <h2>Checkout</h2>
+              <p>Place an order and reserve inventory in real time.</p>
+            </div>
+          </div>
+          <div class="section-grid checkout-grid">
+            <div class="card">
+              <form id="orderForm" class="form-grid">
+                <h3>Billing and contact</h3>
+                <label class="field">
+                  Email
+                  <input id="orderEmail" type="email" required />
+                </label>
+                <div class="payment-grid">
+                  <label class="field">
+                    Card number
+                    <input id="cardNumber" type="text" placeholder="4242 4242 4242 4242" />
+                  </label>
+                  <label class="field">
+                    Name on card
+                    <input id="cardName" type="text" placeholder="A. Player" />
+                  </label>
+                  <label class="field">
+                    Expiry
+                    <input id="cardExpiry" type="text" placeholder="08/28" />
+                  </label>
+                  <label class="field">
+                    CVC
+                    <input id="cardCvc" type="text" placeholder="123" />
+                  </label>
+                </div>
+                <button class="button primary" type="submit">Pay and place order</button>
+              </form>
+              <div id="orderMessage" class="message"></div>
+            </div>
+            <div class="card">
+              <h3>Order tracking</h3>
+              <div class="form-grid">
+                <label class="field">
+                  Order ID
+                  <input id="orderTrackId" type="number" min="1" />
+                </label>
+                <button id="orderTrackButton" class="button secondary" type="button">Track order</button>
+              </div>
+              <div id="orderResult" class="message"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin" id="admin">
+          <div class="section-head">
+            <div>
+              <h2>Catalog ops</h2>
+              <p>Add new products directly into product-service.</p>
+            </div>
+          </div>
+          <div class="section-grid">
+            <div class="card">
+              <form id="productForm" class="form-grid">
+                <h3>Create product</h3>
+                <label class="field">
+                  Name
+                  <input id="productName" type="text" required />
+                </label>
+                <div class="two-col">
+                  <label class="field">
+                    Brand
+                    <input id="productBrand" type="text" required />
+                  </label>
+                  <label class="field">
+                    Category
+                    <input id="productCategory" type="text" required />
+                  </label>
+                </div>
+                <label class="field">
+                  Description
+                  <textarea id="productDescription" rows="3" required></textarea>
+                </label>
+                <div class="two-col">
+                  <label class="field">
+                    Price
+                    <input id="productPrice" type="number" step="0.01" required />
+                  </label>
+                  <label class="field">
+                    Initial stock
+                    <input id="productInitialQuantity" type="number" min="0" required />
+                  </label>
+                </div>
+                <button class="button primary" type="submit">Publish product</button>
+              </form>
+              <div id="productMessage" class="message"></div>
+            </div>
+            <div class="card">
+              <h3>Inventory lookup</h3>
+              <div class="form-grid">
+                <label class="field">
+                  Product ID
+                  <input id="inventoryProductId" type="number" min="1" />
+                </label>
+                <button id="inventoryCheckButton" class="button secondary" type="button">Check inventory</button>
+              </div>
+              <div id="inventoryMessage" class="message"></div>
+            </div>
           </div>
         </section>
 

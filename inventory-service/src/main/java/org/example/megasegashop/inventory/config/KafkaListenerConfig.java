@@ -11,6 +11,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
@@ -21,7 +22,9 @@ public class KafkaListenerConfig {
                     KafkaProperties kafkaProperties,
                     ObjectMapper objectMapper
             ) {
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties(null);
+        Map<String, Object> props = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
+        // Avoid double-configuring JsonDeserializer via properties and setters.
+        props.keySet().removeIf(key -> key.startsWith("spring.json."));
         JsonDeserializer<ProductUpdatedEvent> deserializer =
                 new JsonDeserializer<>(ProductUpdatedEvent.class, objectMapper);
         deserializer.addTrustedPackages("org.example.megasegashop.inventory.event");
@@ -41,7 +44,9 @@ public class KafkaListenerConfig {
                     KafkaProperties kafkaProperties,
                     ObjectMapper objectMapper
             ) {
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties(null);
+        Map<String, Object> props = new HashMap<>(kafkaProperties.buildConsumerProperties(null));
+        // Avoid double-configuring JsonDeserializer via properties and setters.
+        props.keySet().removeIf(key -> key.startsWith("spring.json."));
         JsonDeserializer<ProductDeletedEvent> deserializer =
                 new JsonDeserializer<>(ProductDeletedEvent.class, objectMapper);
         deserializer.addTrustedPackages("org.example.megasegashop.inventory.event");
