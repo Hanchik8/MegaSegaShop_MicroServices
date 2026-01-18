@@ -17,6 +17,12 @@ const sessionPhone = document.getElementById("sessionPhone");
 const signOutButton = document.getElementById("signOutButton");
 const refreshProfileButton = document.getElementById("refreshProfileButton");
 const profileInfo = document.getElementById("profileInfo");
+const profileForm = document.getElementById("profileForm");
+const profileFirstName = document.getElementById("profileFirstName");
+const profileLastName = document.getElementById("profileLastName");
+const profilePhone = document.getElementById("profilePhone");
+const profileFillButton = document.getElementById("profileFillButton");
+const profileUpdateMessage = document.getElementById("profileUpdateMessage");
 
 const cartItems = document.getElementById("cartItems");
 const cartMessage = document.getElementById("cartMessage");
@@ -26,18 +32,50 @@ const cartClearButton = document.getElementById("cartClearButton");
 
 const orderForm = document.getElementById("orderForm");
 const orderEmail = document.getElementById("orderEmail");
+const cardNumber = document.getElementById("cardNumber");
+const cardName = document.getElementById("cardName");
+const cardExpiry = document.getElementById("cardExpiry");
+const cardCvc = document.getElementById("cardCvc");
+const paymentMessage = document.getElementById("paymentMessage");
 const orderMessage = document.getElementById("orderMessage");
 const orderTrackId = document.getElementById("orderTrackId");
 const orderTrackButton = document.getElementById("orderTrackButton");
 const orderResult = document.getElementById("orderResult");
+const useTestCardButton = document.getElementById("useTestCardButton");
+const useDeclineCardButton = document.getElementById("useDeclineCardButton");
+const orderListButton = document.getElementById("orderListButton");
+const orderList = document.getElementById("orderList");
+const orderListMessage = document.getElementById("orderListMessage");
+const orderManageId = document.getElementById("orderManageId");
+const orderStatusSelect = document.getElementById("orderStatusSelect");
+const orderStatusButton = document.getElementById("orderStatusButton");
+const orderCancelButton = document.getElementById("orderCancelButton");
+const orderManageMessage = document.getElementById("orderManageMessage");
 
 const productForm = document.getElementById("productForm");
 const productMessage = document.getElementById("productMessage");
 const inventoryProductId = document.getElementById("inventoryProductId");
 const inventoryCheckButton = document.getElementById("inventoryCheckButton");
 const inventoryMessage = document.getElementById("inventoryMessage");
+const productEditForm = document.getElementById("productEditForm");
+const productEditId = document.getElementById("productEditId");
+const productEditName = document.getElementById("productEditName");
+const productEditBrand = document.getElementById("productEditBrand");
+const productEditCategory = document.getElementById("productEditCategory");
+const productEditDescription = document.getElementById("productEditDescription");
+const productEditPrice = document.getElementById("productEditPrice");
+const productEditDelta = document.getElementById("productEditDelta");
+const productLoadButton = document.getElementById("productLoadButton");
+const productDeleteButton = document.getElementById("productDeleteButton");
+const productEditMessage = document.getElementById("productEditMessage");
 
 const authTabs = document.querySelectorAll(".auth-switch .tab");
+const flowSeedButton = document.getElementById("flowSeedButton");
+const flowAddButton = document.getElementById("flowAddButton");
+const flowCheckoutButton = document.getElementById("flowCheckoutButton");
+const flowClearButton = document.getElementById("flowClearButton");
+const flowReloadButton = document.getElementById("flowReloadButton");
+const activityLog = document.getElementById("activityLog");
 
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -49,6 +87,9 @@ const state = {
   session: loadSession(),
   products: [],
   cart: null,
+  profile: null,
+  lastOrderId: null,
+  lastProductId: null,
 };
 
 function loadSession() {
@@ -92,6 +133,29 @@ function setStatus(text, stateType) {
   }
 }
 
+function logActivity(message, stateType) {
+  if (!activityLog) {
+    return;
+  }
+  const entry = document.createElement("div");
+  entry.className = "activity-entry";
+  const time = document.createElement("span");
+  time.className = "activity-time";
+  time.textContent = new Date().toLocaleTimeString("en-US", { hour12: false });
+  const text = document.createElement("span");
+  text.className = "activity-text";
+  text.textContent = message;
+  entry.appendChild(time);
+  entry.appendChild(text);
+  if (stateType) {
+    entry.dataset.state = stateType;
+  }
+  activityLog.prepend(entry);
+  while (activityLog.children.length > 14) {
+    activityLog.removeChild(activityLog.lastChild);
+  }
+}
+
 function requireSession(message, element) {
   if (!state.session || !state.session.token) {
     setMessage(element || authMessage, message || "Please sign in first.", "warn");
@@ -110,8 +174,50 @@ function updateSessionUI() {
   sessionPhone.textContent = loggedIn ? state.session.phone ?? "-" : "-";
   signOutButton.disabled = !loggedIn;
   refreshProfileButton.disabled = !loggedIn;
+  if (profileFillButton) {
+    profileFillButton.disabled = !loggedIn;
+  }
   cartRefreshButton.disabled = !loggedIn;
   cartClearButton.disabled = !loggedIn;
+  if (orderTrackButton) {
+    orderTrackButton.disabled = !loggedIn;
+  }
+  if (orderListButton) {
+    orderListButton.disabled = !loggedIn;
+  }
+  if (orderStatusButton) {
+    orderStatusButton.disabled = !loggedIn;
+  }
+  if (orderCancelButton) {
+    orderCancelButton.disabled = !loggedIn;
+  }
+  if (useTestCardButton) {
+    useTestCardButton.disabled = !loggedIn;
+  }
+  if (useDeclineCardButton) {
+    useDeclineCardButton.disabled = !loggedIn;
+  }
+  if (inventoryCheckButton) {
+    inventoryCheckButton.disabled = !loggedIn;
+  }
+  if (productLoadButton) {
+    productLoadButton.disabled = !loggedIn;
+  }
+  if (productDeleteButton) {
+    productDeleteButton.disabled = !loggedIn;
+  }
+  if (flowSeedButton) {
+    flowSeedButton.disabled = !loggedIn;
+  }
+  if (flowAddButton) {
+    flowAddButton.disabled = !loggedIn;
+  }
+  if (flowCheckoutButton) {
+    flowCheckoutButton.disabled = !loggedIn;
+  }
+  if (flowClearButton) {
+    flowClearButton.disabled = !loggedIn;
+  }
   if (loggedIn && state.session.email) {
     orderEmail.value = state.session.email;
   }
@@ -315,6 +421,7 @@ async function loadProducts() {
     buildSelectOptions(brandSelect, brands, "brands");
 
     setStatus("Catalog live", "success");
+    logActivity(`Catalog synced (${state.products.length} products)`, "success");
     applyFilters();
   } catch (error) {
     setStatus("Unable to reach product-service", "error");
@@ -325,6 +432,7 @@ async function loadProducts() {
     grid.appendChild(message);
     countEl.textContent = "0 products";
     console.error(error);
+    logActivity(`Catalog sync failed: ${error.message}`, "error");
   }
 }
 
@@ -360,10 +468,12 @@ async function login(event) {
       expiresAt: data.expiresAt,
     });
     setMessage(authMessage, "Signed in successfully.", "success");
+    logActivity(`Signed in as ${email}`, "success");
     await fetchProfile();
     await fetchCart();
   } catch (error) {
     setMessage(authMessage, error.message, "error");
+    logActivity(`Login failed: ${error.message}`, "error");
   }
 }
 
@@ -394,10 +504,12 @@ async function register(event) {
       expiresAt: data.expiresAt,
     });
     setMessage(authMessage, "Account created and signed in.", "success");
+    logActivity(`Registered ${email}`, "success");
     await fetchProfile();
     await fetchCart();
   } catch (error) {
     setMessage(authMessage, error.message, "error");
+    logActivity(`Register failed: ${error.message}`, "error");
   }
 }
 
@@ -405,9 +517,30 @@ function signOut() {
   saveSession(null);
   setMessage(authMessage, "Signed out.", "success");
   setMessage(profileInfo, "", "");
+  setMessage(profileUpdateMessage, "", "");
+  setMessage(paymentMessage, "", "");
+  setMessage(orderMessage, "", "");
+  setMessage(orderResult, "", "");
+  setMessage(orderListMessage, "", "");
+  setMessage(orderManageMessage, "", "");
+  setMessage(productMessage, "", "");
+  setMessage(productEditMessage, "", "");
   cartItems.textContent = "Sign in to see your cart.";
   cartTotal.textContent = currency.format(0);
   cartCountEl.textContent = "0";
+  if (orderList) {
+    orderList.textContent = "Sign in to view orders.";
+  }
+  logActivity("Signed out", "warn");
+}
+
+function fillProfileForm(profile) {
+  if (!profileForm || !profile) {
+    return;
+  }
+  profileFirstName.value = profile.firstName || "";
+  profileLastName.value = profile.lastName || "";
+  profilePhone.value = profile.phone || "";
 }
 
 async function fetchProfile() {
@@ -420,12 +553,46 @@ async function fetchProfile() {
   }
   try {
     const profile = await apiRequest(`/api/users/${state.session.profileId}`);
+    state.profile = profile;
+    fillProfileForm(profile);
     setMessage(profileInfo, `Profile loaded: ${profile.firstName} ${profile.lastName}`, "success");
     if (profile && Object.prototype.hasOwnProperty.call(profile, "phone")) {
       saveSession(Object.assign({}, state.session, { phone: profile.phone }));
     }
+    logActivity("Profile loaded", "success");
   } catch (error) {
     setMessage(profileInfo, error.message, "error");
+    logActivity(`Profile load failed: ${error.message}`, "error");
+  }
+}
+
+async function updateProfile(event) {
+  event.preventDefault();
+  if (!requireSession("Sign in to update your profile.", profileUpdateMessage)) {
+    return;
+  }
+  if (!state.session.profileId) {
+    setMessage(profileUpdateMessage, "Profile ID is not available.", "warn");
+    return;
+  }
+  const payload = {
+    firstName: profileFirstName.value.trim(),
+    lastName: profileLastName.value.trim(),
+    phone: profilePhone.value.trim(),
+  };
+  try {
+    const profile = await apiRequest(`/api/users/${state.session.profileId}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+    state.profile = profile;
+    fillProfileForm(profile);
+    setMessage(profileUpdateMessage, "Profile updated.", "success");
+    saveSession(Object.assign({}, state.session, { phone: profile.phone, email: profile.email }));
+    logActivity("Profile updated", "success");
+  } catch (error) {
+    setMessage(profileUpdateMessage, error.message, "error");
+    logActivity(`Profile update failed: ${error.message}`, "error");
   }
 }
 
@@ -444,9 +611,11 @@ async function handleAddToCart(productId) {
       }),
     });
     setMessage(cartMessage, "Item added to cart.", "success");
+    logActivity(`Added product ${productId} to cart`, "success");
     await fetchCart();
   } catch (error) {
     setMessage(cartMessage, error.message, "error");
+    logActivity(`Add to cart failed: ${error.message}`, "error");
   }
 }
 
@@ -461,8 +630,10 @@ async function fetchCart() {
     const data = await apiRequest(`/api/cart/${state.session.userId}`);
     state.cart = data;
     renderCart(data);
+    logActivity("Cart refreshed", "success");
   } catch (error) {
     setMessage(cartMessage, error.message, "error");
+    logActivity(`Cart refresh failed: ${error.message}`, "error");
   }
 }
 
@@ -547,9 +718,11 @@ async function updateCartQuantity(productId, quantityValue) {
       body: JSON.stringify({ userId: state.session.userId, productId, quantity }),
     });
     setMessage(cartMessage, "Cart updated.", "success");
+    logActivity(`Updated cart item ${productId} to ${quantity}`, "success");
     await fetchCart();
   } catch (error) {
     setMessage(cartMessage, error.message, "error");
+    logActivity(`Cart update failed: ${error.message}`, "error");
   }
 }
 
@@ -560,9 +733,11 @@ async function removeFromCart(productId) {
       body: JSON.stringify({ userId: state.session.userId, productId }),
     });
     setMessage(cartMessage, "Item removed.", "success");
+    logActivity(`Removed product ${productId} from cart`, "success");
     await fetchCart();
   } catch (error) {
     setMessage(cartMessage, error.message, "error");
+    logActivity(`Remove from cart failed: ${error.message}`, "error");
   }
 }
 
@@ -575,21 +750,100 @@ async function clearCart() {
       method: "DELETE",
     });
     setMessage(cartMessage, "Cart cleared.", "success");
+    logActivity("Cart cleared", "success");
     await fetchCart();
   } catch (error) {
     setMessage(cartMessage, error.message, "error");
+    logActivity(`Cart clear failed: ${error.message}`, "error");
   }
 }
 
-async function placeOrder(event) {
-  event.preventDefault();
-  if (!requireSession("Sign in to place an order.", orderMessage)) {
+function buildPaymentPayload() {
+  const amount = state.cart && state.cart.totalAmount ? Number(state.cart.totalAmount) : 0;
+  return {
+    amount,
+    currency: "USD",
+    cardNumber: cardNumber.value.trim(),
+    cardHolder: cardName.value.trim(),
+    expiry: cardExpiry.value.trim(),
+    cvc: cardCvc.value.trim(),
+    email: orderEmail.value.trim(),
+    reference: `ui-${state.session.userId}-${Date.now()}`,
+  };
+}
+
+async function chargePayment() {
+  if (!requireSession("Sign in to checkout.", paymentMessage)) {
+    return null;
+  }
+  setMessage(paymentMessage, "", "");
+  if (!state.cart || !state.cart.items) {
+    await fetchCart();
+  }
+  if (!state.cart || !state.cart.items || state.cart.items.length === 0) {
+    setMessage(paymentMessage, "Cart is empty.", "warn");
+    logActivity("Payment blocked: cart empty", "warn");
+    return null;
+  }
+  const payload = buildPaymentPayload();
+  if (!Number.isFinite(payload.amount) || payload.amount <= 0) {
+    setMessage(paymentMessage, "Cart total is invalid.", "warn");
+    return null;
+  }
+  if (!payload.cardNumber || !payload.cardHolder || !payload.expiry || !payload.cvc) {
+    setMessage(paymentMessage, "Card details are required.", "warn");
+    return null;
+  }
+  try {
+    const payment = await apiRequest("/api/payments/charge", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    if (payment.approved) {
+      setMessage(
+        paymentMessage,
+        `Approved · ${payment.paymentId} · Risk ${payment.riskLevel}`,
+        "success"
+      );
+      logActivity(`Payment approved (${payment.paymentId})`, "success");
+      return payment;
+    }
+    setMessage(paymentMessage, `Declined: ${payment.message}`, "error");
+    logActivity(`Payment declined (${payment.message})`, "error");
+    return null;
+  } catch (error) {
+    setMessage(paymentMessage, error.message, "error");
+    logActivity(`Payment failed: ${error.message}`, "error");
+    return null;
+  }
+}
+
+function fillTestCard(variant) {
+  if (!cardNumber || !cardName || !cardExpiry || !cardCvc) {
     return;
+  }
+  if (variant === "decline") {
+    cardNumber.value = "4000 0000 0000 0002";
+  } else {
+    cardNumber.value = "4111 1111 1111 1111";
+  }
+  cardName.value = "Test Operator";
+  cardExpiry.value = "12/30";
+  cardCvc.value = "123";
+}
+
+async function submitOrder() {
+  if (!requireSession("Sign in to place an order.", orderMessage)) {
+    return null;
   }
   const email = orderEmail.value.trim();
   if (!email) {
     setMessage(orderMessage, "Email is required for checkout.", "warn");
-    return;
+    return null;
+  }
+  const payment = await chargePayment();
+  if (!payment) {
+    return null;
   }
   try {
     const order = await apiRequest("/api/orders", {
@@ -600,9 +854,21 @@ async function placeOrder(event) {
     orderTrackId.value = order.orderId;
     renderOrder(order);
     await clearCart();
+    logActivity(`Order placed (#${order.orderId})`, "success");
+    if (orderList) {
+      await fetchOrders();
+    }
+    return order;
   } catch (error) {
     setMessage(orderMessage, error.message, "error");
+    logActivity(`Order failed: ${error.message}`, "error");
+    return null;
   }
+}
+
+async function placeOrder(event) {
+  event.preventDefault();
+  await submitOrder();
 }
 
 function renderOrder(order) {
@@ -610,6 +876,9 @@ function renderOrder(order) {
     return;
   }
   const lines = [];
+  if (order.orderId) {
+    lines.push(`Order: #${order.orderId}`);
+  }
   lines.push(`Status: ${order.status}`);
   lines.push(`Total: ${currency.format(Number(order.totalAmount || 0))}`);
   if (order.items && order.items.length) {
@@ -620,6 +889,12 @@ function renderOrder(order) {
   }
   orderResult.textContent = lines.join("\n");
   orderResult.dataset.state = "success";
+  if (order.orderId) {
+    state.lastOrderId = order.orderId;
+    if (orderManageId) {
+      orderManageId.value = order.orderId;
+    }
+  }
 }
 
 async function trackOrder() {
@@ -634,8 +909,109 @@ async function trackOrder() {
   try {
     const order = await apiRequest(`/api/orders/${id}`);
     renderOrder(order);
+    logActivity(`Order tracked (#${id})`, "success");
   } catch (error) {
     setMessage(orderResult, error.message, "error");
+    logActivity(`Order track failed: ${error.message}`, "error");
+  }
+}
+
+function renderOrderList(orders) {
+  if (!orderList) {
+    return;
+  }
+  orderList.innerHTML = "";
+  if (!orders || orders.length === 0) {
+    orderList.textContent = "No orders yet.";
+    return;
+  }
+  orders.forEach((order) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "order-pill";
+    const id = document.createElement("span");
+    id.textContent = `#${order.orderId}`;
+    const status = document.createElement("strong");
+    status.textContent = order.status;
+    const total = document.createElement("small");
+    total.textContent = currency.format(Number(order.totalAmount || 0));
+    item.appendChild(id);
+    item.appendChild(status);
+    item.appendChild(total);
+    item.addEventListener("click", () => {
+      orderTrackId.value = order.orderId;
+      if (orderManageId) {
+        orderManageId.value = order.orderId;
+      }
+      renderOrder(order);
+    });
+    orderList.appendChild(item);
+  });
+}
+
+async function fetchOrders() {
+  if (!requireSession("Sign in to load orders.", orderListMessage)) {
+    return;
+  }
+  try {
+    const orders = await apiRequest(`/api/orders/user/${state.session.userId}`);
+    const sorted = Array.isArray(orders)
+      ? orders.slice().sort((a, b) => (b.orderId || 0) - (a.orderId || 0))
+      : [];
+    renderOrderList(sorted);
+    setMessage(orderListMessage, `${sorted.length} orders loaded.`, "success");
+    logActivity("Order list loaded", "success");
+  } catch (error) {
+    setMessage(orderListMessage, error.message, "error");
+    logActivity(`Order list failed: ${error.message}`, "error");
+  }
+}
+
+async function updateOrderStatus() {
+  if (!requireSession("Sign in to update order status.", orderManageMessage)) {
+    return;
+  }
+  const id = Number(orderManageId.value);
+  if (!id) {
+    setMessage(orderManageMessage, "Provide a valid order ID.", "warn");
+    return;
+  }
+  const status = orderStatusSelect.value;
+  try {
+    const order = await apiRequest(`/api/orders/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+    renderOrder(order);
+    setMessage(orderManageMessage, `Order ${id} updated to ${order.status}.`, "success");
+    await fetchOrders();
+    logActivity(`Order ${id} status -> ${order.status}`, "success");
+  } catch (error) {
+    setMessage(orderManageMessage, error.message, "error");
+    logActivity(`Order status failed: ${error.message}`, "error");
+  }
+}
+
+async function cancelOrder() {
+  if (!requireSession("Sign in to cancel orders.", orderManageMessage)) {
+    return;
+  }
+  const id = Number(orderManageId.value);
+  if (!id) {
+    setMessage(orderManageMessage, "Provide a valid order ID.", "warn");
+    return;
+  }
+  try {
+    const order = await apiRequest(`/api/orders/${id}/cancel`, {
+      method: "POST",
+    });
+    renderOrder(order);
+    setMessage(orderManageMessage, `Order ${id} cancelled.`, "success");
+    await fetchOrders();
+    logActivity(`Order ${id} cancelled`, "warn");
+  } catch (error) {
+    setMessage(orderManageMessage, error.message, "error");
+    logActivity(`Order cancel failed: ${error.message}`, "error");
   }
 }
 
@@ -659,10 +1035,108 @@ async function createProduct(event) {
       body: JSON.stringify(payload),
     });
     setMessage(productMessage, `Product created: ${product.name}`, "success");
+    state.lastProductId = product.id;
+    if (productEditId) {
+      productEditId.value = product.id;
+    }
+    if (productEditName) {
+      productEditName.value = product.name || "";
+      productEditBrand.value = product.brand || "";
+      productEditCategory.value = product.category || "";
+      productEditDescription.value = product.description || "";
+      productEditPrice.value = product.price || "";
+      productEditDelta.value = "";
+    }
+    logActivity(`Product created (#${product.id})`, "success");
     productForm.reset();
     await loadProducts();
   } catch (error) {
     setMessage(productMessage, error.message, "error");
+    logActivity(`Product create failed: ${error.message}`, "error");
+  }
+}
+
+async function loadProductForEdit() {
+  if (!requireSession("Sign in to edit products.", productEditMessage)) {
+    return;
+  }
+  const id = Number(productEditId.value);
+  if (!id) {
+    setMessage(productEditMessage, "Enter a valid product ID.", "warn");
+    return;
+  }
+  try {
+    const product = await apiRequest(`/api/products/${id}`);
+    productEditName.value = product.name || "";
+    productEditBrand.value = product.brand || "";
+    productEditCategory.value = product.category || "";
+    productEditDescription.value = product.description || "";
+    productEditPrice.value = product.price || "";
+    productEditDelta.value = "";
+    setMessage(productEditMessage, `Loaded ${product.name}.`, "success");
+    state.lastProductId = product.id;
+    logActivity(`Product loaded (#${product.id})`, "success");
+  } catch (error) {
+    setMessage(productEditMessage, error.message, "error");
+    logActivity(`Product load failed: ${error.message}`, "error");
+  }
+}
+
+async function updateProduct(event) {
+  event.preventDefault();
+  if (!requireSession("Sign in to edit products.", productEditMessage)) {
+    return;
+  }
+  const id = Number(productEditId.value);
+  if (!id) {
+    setMessage(productEditMessage, "Enter a valid product ID.", "warn");
+    return;
+  }
+  const payload = {
+    name: productEditName.value.trim(),
+    brand: productEditBrand.value.trim(),
+    category: productEditCategory.value.trim(),
+    description: productEditDescription.value.trim(),
+    price: Number(productEditPrice.value),
+  };
+  const deltaValue = productEditDelta.value.trim();
+  if (deltaValue !== "") {
+    payload.inventoryDelta = Number(deltaValue);
+  }
+  try {
+    const product = await apiRequest(`/api/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+    setMessage(productEditMessage, `Updated ${product.name}.`, "success");
+    productEditDelta.value = "";
+    await loadProducts();
+    logActivity(`Product updated (#${id})`, "success");
+  } catch (error) {
+    setMessage(productEditMessage, error.message, "error");
+    logActivity(`Product update failed: ${error.message}`, "error");
+  }
+}
+
+async function deleteProduct() {
+  if (!requireSession("Sign in to delete products.", productEditMessage)) {
+    return;
+  }
+  const id = Number(productEditId.value);
+  if (!id) {
+    setMessage(productEditMessage, "Enter a valid product ID.", "warn");
+    return;
+  }
+  try {
+    await apiRequest(`/api/products/${id}`, {
+      method: "DELETE",
+    });
+    setMessage(productEditMessage, `Product ${id} deleted.`, "success");
+    await loadProducts();
+    logActivity(`Product deleted (#${id})`, "warn");
+  } catch (error) {
+    setMessage(productEditMessage, error.message, "error");
+    logActivity(`Product delete failed: ${error.message}`, "error");
   }
 }
 
@@ -678,8 +1152,70 @@ async function checkInventory() {
   try {
     const item = await apiRequest(`/api/inventory/${productId}`);
     setMessage(inventoryMessage, `Available: ${item.availableQuantity}`, "success");
+    logActivity(`Inventory checked (${productId})`, "success");
   } catch (error) {
     setMessage(inventoryMessage, error.message, "error");
+    logActivity(`Inventory check failed: ${error.message}`, "error");
+  }
+}
+
+async function seedDemoProduct() {
+  if (!requireSession("Sign in to seed products.", productMessage)) {
+    return;
+  }
+  const suffix = Math.floor(100 + Math.random() * 900);
+  const payload = {
+    name: `Demo Console ${suffix}`,
+    brand: "MegaSega",
+    description: "Demo build for flow testing.",
+    price: 99.99,
+    initialQuantity: 4,
+    category: "Demo",
+  };
+  try {
+    const product = await apiRequest("/api/products", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    setMessage(productMessage, `Demo product created: ${product.name}`, "success");
+    state.lastProductId = product.id;
+    productEditId.value = product.id;
+    productEditName.value = product.name || "";
+    productEditBrand.value = product.brand || "";
+    productEditCategory.value = product.category || "";
+    productEditDescription.value = product.description || "";
+    productEditPrice.value = product.price || "";
+    productEditDelta.value = "";
+    await loadProducts();
+    logActivity(`Demo product seeded (#${product.id})`, "success");
+  } catch (error) {
+    setMessage(productMessage, error.message, "error");
+    logActivity(`Demo seed failed: ${error.message}`, "error");
+  }
+}
+
+async function addFeaturedToCart() {
+  if (!requireSession("Sign in to add items.", cartMessage)) {
+    return;
+  }
+  if (!state.products.length) {
+    await loadProducts();
+  }
+  const product = state.products[0];
+  if (!product) {
+    setMessage(cartMessage, "No products available to add.", "warn");
+    return;
+  }
+  await handleAddToCart(product.id);
+}
+
+async function quickCheckout() {
+  if (cardNumber && !cardNumber.value.trim()) {
+    fillTestCard("approve");
+  }
+  const order = await submitOrder();
+  if (order) {
+    await fetchOrders();
   }
 }
 
@@ -693,6 +1229,12 @@ catalogReloadButton.addEventListener("click", () => {
 
 loginForm.addEventListener("submit", login);
 registerForm.addEventListener("submit", register);
+if (profileForm) {
+  profileForm.addEventListener("submit", updateProfile);
+}
+if (profileFillButton) {
+  profileFillButton.addEventListener("click", fetchProfile);
+}
 
 signOutButton.addEventListener("click", signOut);
 refreshProfileButton.addEventListener("click", fetchProfile);
@@ -702,9 +1244,49 @@ cartClearButton.addEventListener("click", clearCart);
 
 orderForm.addEventListener("submit", placeOrder);
 orderTrackButton.addEventListener("click", trackOrder);
+if (useTestCardButton) {
+  useTestCardButton.addEventListener("click", () => fillTestCard("approve"));
+}
+if (useDeclineCardButton) {
+  useDeclineCardButton.addEventListener("click", () => fillTestCard("decline"));
+}
+if (orderListButton) {
+  orderListButton.addEventListener("click", fetchOrders);
+}
+if (orderStatusButton) {
+  orderStatusButton.addEventListener("click", updateOrderStatus);
+}
+if (orderCancelButton) {
+  orderCancelButton.addEventListener("click", cancelOrder);
+}
 
 productForm.addEventListener("submit", createProduct);
 inventoryCheckButton.addEventListener("click", checkInventory);
+if (productEditForm) {
+  productEditForm.addEventListener("submit", updateProduct);
+}
+if (productLoadButton) {
+  productLoadButton.addEventListener("click", loadProductForEdit);
+}
+if (productDeleteButton) {
+  productDeleteButton.addEventListener("click", deleteProduct);
+}
+
+if (flowSeedButton) {
+  flowSeedButton.addEventListener("click", seedDemoProduct);
+}
+if (flowAddButton) {
+  flowAddButton.addEventListener("click", addFeaturedToCart);
+}
+if (flowCheckoutButton) {
+  flowCheckoutButton.addEventListener("click", quickCheckout);
+}
+if (flowClearButton) {
+  flowClearButton.addEventListener("click", clearCart);
+}
+if (flowReloadButton) {
+  flowReloadButton.addEventListener("click", loadProducts);
+}
 
 authTabs.forEach((tab) => {
   tab.addEventListener("click", () => setAuthMode(tab.dataset.mode));
@@ -716,4 +1298,7 @@ loadProducts();
 fetchCart();
 if (state.session && state.session.profileId) {
   fetchProfile();
+}
+if (state.session && state.session.userId && orderList) {
+  fetchOrders();
 }
