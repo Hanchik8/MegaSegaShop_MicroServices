@@ -20,6 +20,17 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  info:
+    title: Cart Service API
+    description: Shopping cart management service
+    version: 1.0.0
+
 management:
   endpoints:
     web:

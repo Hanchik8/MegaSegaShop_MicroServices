@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.megasegashop.shared.web.AdminOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ public class ProductController {
         return toResponse(productService.getProductById(id));
     }
 
+    @AdminOnly
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductCreateRequest request) {
         Category category = categoryRepository.findByName(request.category())
@@ -83,6 +85,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));
     }
 
+    @AdminOnly
     @PutMapping("/{id}")
     public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         Category category = categoryRepository.findByName(request.category())
@@ -90,6 +93,7 @@ public class ProductController {
         return toResponse(productService.updateProduct(id, request, category));
     }
 
+    @AdminOnly
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.deleteProductById(id);

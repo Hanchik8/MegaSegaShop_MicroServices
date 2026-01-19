@@ -1,17 +1,14 @@
 package org.example.megasegashop.auth.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.example.megasegashop.auth.dto.JwtToken;
+import org.example.megasegashop.shared.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @Service
 public class JwtService {
@@ -27,40 +24,19 @@ public class JwtService {
     }
 
     public JwtToken issueToken(String subject, String role) {
-        Instant now = Instant.now();
-        Instant expiresAt = now.plus(expirationMinutes, ChronoUnit.MINUTES);
-        String token = Jwts.builder()
-                .subject(subject)
-                .claim("role", role)
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(expiresAt))
-                .signWith(key, Jwts.SIG.HS256)
-                .compact();
-        return new JwtToken(token, expiresAt);
+        Object[] result = JwtTokenUtil.generateTokenWithExpiry(subject, role, key, expirationMinutes);
+        return new JwtToken((String) result[0], (Instant) result[1]);
     }
 
     public boolean isValid(String token) {
-        try {
-            parseClaims(token);
-            return true;
-        } catch (RuntimeException ex) {
-            return false;
-        }
+        return JwtTokenUtil.isValid(token, key);
     }
 
     public String extractSubject(String token) {
-        return parseClaims(token).getSubject();
+        return JwtTokenUtil.extractSubject(token, key);
     }
 
     public String extractRole(String token) {
-        return parseClaims(token).get("role", String.class);
-    }
-
-    private Claims parseClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return JwtTokenUtil.extractRole(token, key);
     }
 }

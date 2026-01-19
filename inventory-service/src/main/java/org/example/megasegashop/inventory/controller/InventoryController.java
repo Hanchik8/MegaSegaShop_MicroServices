@@ -1,8 +1,8 @@
 package org.example.megasegashop.inventory.controller;
 
 import jakarta.validation.Valid;
-import org.example.megasegashop.inventory.dto.InventoryReserveRequest;
-import org.example.megasegashop.inventory.dto.InventoryReserveResponse;
+import org.example.megasegashop.shared.dto.InventoryReserveRequest;
+import org.example.megasegashop.shared.dto.InventoryReserveResponse;
 import org.example.megasegashop.inventory.entity.InventoryItem;
 import org.example.megasegashop.inventory.service.InventoryService;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.megasegashop.shared.web.AdminOnly;
 
 @RestController
 @RequestMapping("/inventory")
@@ -31,6 +32,7 @@ public class InventoryController {
         return ResponseEntity.ok(item);
     }
 
+    @AdminOnly
     @PostMapping("/reserve")
     public InventoryReserveResponse reserve(@Valid @RequestBody InventoryReserveRequest request) {
         return inventoryService.reserveItems(request);
@@ -40,6 +42,7 @@ public class InventoryController {
      * Compensating endpoint: releases previously reserved items.
      * Used by Saga pattern when order creation fails after reservation.
      */
+    @AdminOnly
     @PostMapping("/release")
     public InventoryReserveResponse release(@Valid @RequestBody InventoryReserveRequest request) {
         return inventoryService.releaseItems(request);

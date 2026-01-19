@@ -1,8 +1,8 @@
 package org.example.megasegashop.inventory.service;
 
-import org.example.megasegashop.inventory.dto.InventoryItemRequest;
-import org.example.megasegashop.inventory.dto.InventoryReserveRequest;
-import org.example.megasegashop.inventory.dto.InventoryReserveResponse;
+import org.example.megasegashop.shared.dto.InventoryItemRequest;
+import org.example.megasegashop.shared.dto.InventoryReserveRequest;
+import org.example.megasegashop.shared.dto.InventoryReserveResponse;
 import org.example.megasegashop.inventory.entity.InventoryItem;
 import org.example.megasegashop.inventory.repository.InventoryRepository;
 import org.springframework.stereotype.Service;

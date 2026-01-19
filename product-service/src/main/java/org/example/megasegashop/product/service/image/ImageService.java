@@ -4,8 +4,7 @@ import org.example.megasegashop.product.model.Image;
 import org.example.megasegashop.product.model.Product;
 import org.example.megasegashop.product.repository.ImageRepository;
 import org.example.megasegashop.product.repository.ProductRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +16,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ImageService {
-    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
-
     private final ImageRepository imageRepository;
     private final ProductRepository productRepository;
 
@@ -45,7 +43,7 @@ public class ImageService {
         try {
             image.setImage(new SerialBlob(file.getBytes()));
         } catch (IOException | SQLException ex) {
-            logger.error("Failed to read image content: {}", ex.getMessage());
+            log.error("Failed to read image content: {}", ex.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image payload");
         }
 

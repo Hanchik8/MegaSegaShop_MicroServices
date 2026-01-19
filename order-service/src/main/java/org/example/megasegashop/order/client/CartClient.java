@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "cart-service")
+@FeignClient(name = "cart-service", fallback = CartClientFallback.class)
 public interface CartClient {
     @GetMapping("/cart/{userId}")
     CartSnapshot getCart(@PathVariable("userId") Long userId);

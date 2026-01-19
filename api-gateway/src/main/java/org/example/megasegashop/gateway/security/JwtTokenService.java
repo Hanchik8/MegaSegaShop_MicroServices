@@ -1,8 +1,7 @@
 package org.example.megasegashop.gateway.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.example.megasegashop.shared.security.JwtTokenUtil;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,27 +16,14 @@ public class JwtTokenService {
     }
 
     public boolean isValid(String token) {
-        try {
-            parseClaims(token);
-            return true;
-        } catch (RuntimeException ex) {
-            return false;
-        }
+        return JwtTokenUtil.isValid(token, key);
     }
 
     public String extractSubject(String token) {
-        return parseClaims(token).getSubject();
+        return JwtTokenUtil.extractSubject(token, key);
     }
 
     public String extractRole(String token) {
-        return parseClaims(token).get("role", String.class);
-    }
-
-    private Claims parseClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return JwtTokenUtil.extractRole(token, key);
     }
 }

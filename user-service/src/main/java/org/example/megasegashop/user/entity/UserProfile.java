@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,9 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_profiles")
+@Table(name = "user_profiles", indexes = {
+        @Index(name = "idx_user_profiles_auth_user_id", columnList = "authUserId")
+})
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

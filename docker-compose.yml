@@ -83,6 +83,14 @@ services:
     networks:
       - megasegashop-net
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: megasegashop-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - megasegashop-net
+
   config-server:
     build:
       context: .

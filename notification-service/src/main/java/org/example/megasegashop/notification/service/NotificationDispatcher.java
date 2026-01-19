@@ -3,8 +3,7 @@ package org.example.megasegashop.notification.service;
 import org.example.megasegashop.notification.config.NotificationProperties;
 import org.example.megasegashop.notification.event.OrderCancelledEvent;
 import org.example.megasegashop.notification.event.OrderPlacedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,10 +14,9 @@ import org.springframework.web.client.RestClient;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Slf4j
 @Component
 public class NotificationDispatcher {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationDispatcher.class);
-
     private final JavaMailSender mailSender;
     private final RestClient restClient;
     private final NotificationProperties properties;
@@ -39,7 +37,7 @@ public class NotificationDispatcher {
                 || properties.getSms().isEnabled();
 
         if (!anyEnabled) {
-            logger.info("Notification channels are disabled; event processed without sending");
+            log.info("Notification channels are disabled; event processed without sending");
             return;
         }
 
@@ -60,7 +58,7 @@ public class NotificationDispatcher {
                 || properties.getSms().isEnabled();
 
         if (!anyEnabled) {
-            logger.info("Notification channels are disabled; cancellation event processed without sending");
+            log.info("Notification channels are disabled; cancellation event processed without sending");
             return;
         }
 
@@ -78,7 +76,7 @@ public class NotificationDispatcher {
     private void sendEmail(OrderPlacedEvent event) {
         String from = properties.getEmail().getFrom();
         if (!StringUtils.hasText(from)) {
-            logger.warn("Email notifications are enabled, but notification.email.from is empty");
+            log.warn("Email notifications are enabled, but notification.email.from is empty");
             return;
         }
 
@@ -89,16 +87,16 @@ public class NotificationDispatcher {
             message.setSubject(String.format(properties.getEmail().getSubjectTemplate(), event.orderId()));
             message.setText(buildEmailBody(event));
             mailSender.send(message);
-            logger.info("Email notification sent to {}", event.email());
+            log.info("Email notification sent to {}", event.email());
         } catch (Exception ex) {
-            logger.error("Failed to send email notification: {}", ex.getMessage());
+            log.error("Failed to send email notification: {}", ex.getMessage());
         }
     }
 
     private void sendWebhook(OrderPlacedEvent event) {
         String url = properties.getWebhook().getUrl();
         if (!StringUtils.hasText(url)) {
-            logger.warn("Webhook notifications are enabled, but notification.webhook.url is empty");
+            log.warn("Webhook notifications are enabled, but notification.webhook.url is empty");
             return;
         }
 
@@ -121,16 +119,16 @@ public class NotificationDispatcher {
             }
 
             request.retrieve().toBodilessEntity();
-            logger.info("Webhook notification sent to {}", url);
+            log.info("Webhook notification sent to {}", url);
         } catch (Exception ex) {
-            logger.error("Failed to send webhook notification: {}", ex.getMessage());
+            log.error("Failed to send webhook notification: {}", ex.getMessage());
         }
     }
 
     private void sendSms(OrderPlacedEvent event) {
         NotificationProperties.Sms sms = properties.getSms();
         if (!StringUtils.hasText(sms.getUrl())) {
-            logger.warn("SMS notifications are enabled, but notification.sms.url is empty");
+            log.warn("SMS notifications are enabled, but notification.sms.url is empty");
             return;
         }
 
@@ -141,7 +139,7 @@ public class NotificationDispatcher {
             recipient = sms.getDefaultRecipient();
         }
         if (!StringUtils.hasText(recipient)) {
-            logger.warn("SMS notifications are enabled, but no recipient is available");
+            log.warn("SMS notifications are enabled, but no recipient is available");
             return;
         }
 
@@ -166,16 +164,16 @@ public class NotificationDispatcher {
             }
 
             request.retrieve().toBodilessEntity();
-            logger.info("SMS notification sent to {}", recipient);
+            log.info("SMS notification sent to {}", recipient);
         } catch (Exception ex) {
-            logger.error("Failed to send SMS notification: {}", ex.getMessage());
+            log.error("Failed to send SMS notification: {}", ex.getMessage());
         }
     }
 
     private void sendCancellationEmail(OrderCancelledEvent event) {
         String from = properties.getEmail().getFrom();
         if (!StringUtils.hasText(from)) {
-            logger.warn("Email notifications are enabled, but notification.email.from is empty");
+            log.warn("Email notifications are enabled, but notification.email.from is empty");
             return;
         }
 
@@ -186,16 +184,16 @@ public class NotificationDispatcher {
             message.setSubject(String.format("Your MegaSega order %s has been cancelled", event.orderId()));
             message.setText(buildCancellationEmailBody(event));
             mailSender.send(message);
-            logger.info("Cancellation email sent to {}", event.email());
+            log.info("Cancellation email sent to {}", event.email());
         } catch (Exception ex) {
-            logger.error("Failed to send cancellation email: {}", ex.getMessage());
+            log.error("Failed to send cancellation email: {}", ex.getMessage());
         }
     }
 
     private void sendCancellationWebhook(OrderCancelledEvent event) {
         String url = properties.getWebhook().getUrl();
         if (!StringUtils.hasText(url)) {
-            logger.warn("Webhook notifications are enabled, but notification.webhook.url is empty");
+            log.warn("Webhook notifications are enabled, but notification.webhook.url is empty");
             return;
         }
 
@@ -218,16 +216,16 @@ public class NotificationDispatcher {
             }
 
             request.retrieve().toBodilessEntity();
-            logger.info("Cancellation webhook sent to {}", url);
+            log.info("Cancellation webhook sent to {}", url);
         } catch (Exception ex) {
-            logger.error("Failed to send cancellation webhook: {}", ex.getMessage());
+            log.error("Failed to send cancellation webhook: {}", ex.getMessage());
         }
     }
 
     private void sendCancellationSms(OrderCancelledEvent event) {
         NotificationProperties.Sms sms = properties.getSms();
         if (!StringUtils.hasText(sms.getUrl())) {
-            logger.warn("SMS notifications are enabled, but notification.sms.url is empty");
+            log.warn("SMS notifications are enabled, but notification.sms.url is empty");
             return;
         }
 
@@ -238,7 +236,7 @@ public class NotificationDispatcher {
             recipient = sms.getDefaultRecipient();
         }
         if (!StringUtils.hasText(recipient)) {
-            logger.warn("SMS notifications are enabled, but no recipient is available");
+            log.warn("SMS notifications are enabled, but no recipient is available");
             return;
         }
 
@@ -263,9 +261,9 @@ public class NotificationDispatcher {
             }
 
             request.retrieve().toBodilessEntity();
-            logger.info("Cancellation SMS sent to {}", recipient);
+            log.info("Cancellation SMS sent to {}", recipient);
         } catch (Exception ex) {
-            logger.error("Failed to send cancellation SMS: {}", ex.getMessage());
+            log.error("Failed to send cancellation SMS: {}", ex.getMessage());
         }
     }
 

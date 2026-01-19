@@ -4,19 +4,17 @@ import org.example.megasegashop.inventory.client.ProductCatalogClient;
 import org.example.megasegashop.inventory.dto.ProductSnapshot;
 import org.example.megasegashop.inventory.entity.InventoryItem;
 import org.example.megasegashop.inventory.repository.InventoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @ConditionalOnProperty(prefix = "inventory.seed", name = "enabled", havingValue = "true")
 public class InventoryDataSeeder implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(InventoryDataSeeder.class);
-
     private final ProductCatalogClient productCatalogClient;
     private final InventoryRepository inventoryRepository;
     private final InventorySeedProperties seedProperties;
@@ -37,12 +35,12 @@ public class InventoryDataSeeder implements CommandLineRunner {
         try {
             products = productCatalogClient.fetchProducts();
         } catch (Exception ex) {
-            logger.warn("Inventory seeding skipped: failed to fetch products: {}", ex.getMessage());
+            log.warn("Inventory seeding skipped: failed to fetch products: {}", ex.getMessage());
             return;
         }
 
         if (products.isEmpty()) {
-            logger.info("Inventory seeding skipped: product list is empty");
+            log.info("Inventory seeding skipped: product list is empty");
             return;
         }
 
@@ -59,6 +57,6 @@ public class InventoryDataSeeder implements CommandLineRunner {
             inventoryRepository.save(item);
             created++;
         }
-        logger.info("Inventory seeding completed: created {} item(s)", created);
+        log.info("Inventory seeding completed: created {} item(s)", created);
     }
 }

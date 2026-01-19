@@ -10,8 +10,7 @@ import org.example.megasegashop.cart.dto.RemoveCartItemRequest;
 import org.example.megasegashop.cart.entity.Cart;
 import org.example.megasegashop.cart.entity.CartItem;
 import org.example.megasegashop.cart.repository.CartRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +20,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CartService {
-    private static final Logger logger = LoggerFactory.getLogger(CartService.class);
-    
     private final CartRepository cartRepository;
     private final ProductClient productClient;
 
@@ -78,14 +76,14 @@ public class CartService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
                         "Product not found: " + productId);
             }
-            logger.debug("Fetched product: id={}, name={}, price={}", 
+            log.debug("Fetched product: id={}, name={}, price={}", 
                     product.id(), product.name(), product.price());
             return product;
         } catch (FeignException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
                     "Product not found: " + productId);
         } catch (FeignException e) {
-            logger.error("Failed to fetch product {}: {}", productId, e.getMessage());
+            log.error("Failed to fetch product {}: {}", productId, e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, 
                     "Product service is unavailable");
         }

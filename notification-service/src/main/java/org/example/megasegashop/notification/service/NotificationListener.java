@@ -1,22 +1,26 @@
 package org.example.megasegashop.notification.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.example.megasegashop.notification.event.OrderCancelledEvent;
 import org.example.megasegashop.notification.event.OrderPlacedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.time.Duration;
 
+@Slf4j
 @Component
 public class NotificationListener {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationListener.class);
-    private static final int MAX_DEDUPED_ORDERS = 10000;
-
-    private final ConcurrentMap<Long, Boolean> processedPlacedOrders = new ConcurrentHashMap<>();
-    private final ConcurrentMap<Long, Boolean> processedCancelledOrders = new ConcurrentHashMap<>();
+    private final Cache<Long, Boolean> processedPlacedOrders = Caffeine.newBuilder()
+            .maximumSize(10_000)
+            .expireAfterWrite(Duration.ofHours(24))
+            .build();
+    private final Cache<Long, Boolean> processedCancelledOrders = Caffeine.newBuilder()
+            .maximumSize(10_000)
+            .expireAfterWrite(Duration.ofHours(24))
+            .build();
     private final NotificationDispatcher notificationDispatcher;
 
     public NotificationListener(NotificationDispatcher notificationDispatcher) {
@@ -28,7 +32,7 @@ public class NotificationListener {
         if (!markProcessed(processedPlacedOrders, event.orderId(), "order.placed")) {
             return;
         }
-        logger.info("Received order.placed event for order {}", event.orderId());
+        log.info("Received order.placed event for order {}", event.orderId());
         notificationDispatcher.dispatch(event);
     }
 
@@ -41,25 +45,22 @@ public class NotificationListener {
         if (!markProcessed(processedCancelledOrders, event.orderId(), "order.cancelled")) {
             return;
         }
-        logger.info("Received order.cancelled event for order {}", event.orderId());
+        log.info("Received order.cancelled event for order {}", event.orderId());
         notificationDispatcher.dispatchCancellation(event);
     }
 
-    private boolean markProcessed(ConcurrentMap<Long, Boolean> cache, Long orderId, String eventType) {
+    private boolean markProcessed(Cache<Long, Boolean> cache, Long orderId, String eventType) {
         if (orderId == null) {
-            logger.warn("Skipping {} event with missing orderId", eventType);
+            log.warn("Skipping {} event with missing orderId", eventType);
             return false;
         }
 
-        if (cache.putIfAbsent(orderId, Boolean.TRUE) != null) {
-            logger.info("Duplicate {} event for order {}, skipping", eventType, orderId);
+        if (cache.getIfPresent(orderId) != null) {
+            log.info("Duplicate {} event for order {}, skipping", eventType, orderId);
             return false;
         }
 
-        if (cache.size() > MAX_DEDUPED_ORDERS) {
-            cache.clear();
-        }
-
+        cache.put(orderId, Boolean.TRUE);
         return true;
     }
 }

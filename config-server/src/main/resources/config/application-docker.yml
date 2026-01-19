@@ -9,3 +9,9 @@ eureka:
   instance:
     prefer-ip-address: false
     hostname: ${EUREKA_INSTANCE_HOSTNAME:${spring.application.name}}
+
+# Zipkin endpoint for Docker environment
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans

@@ -35,3 +35,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local tooling ###
+.codex/
+.cursor/
+.shared/

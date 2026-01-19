@@ -36,6 +36,17 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  info:
+    title: Inventory Service API
+    description: Inventory and stock management service
+    version: 1.0.0
+
 management:
   endpoints:
     web:

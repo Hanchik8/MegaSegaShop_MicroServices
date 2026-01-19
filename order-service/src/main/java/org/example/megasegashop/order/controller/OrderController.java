@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.megasegashop.shared.web.AdminOnly;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class OrderController {
         return orderService.getOrdersByUserId(userId);
     }
 
+    @AdminOnly
     @PatchMapping("/{orderId}/status")
     public OrderResponse updateStatus(
             @PathVariable Long orderId,

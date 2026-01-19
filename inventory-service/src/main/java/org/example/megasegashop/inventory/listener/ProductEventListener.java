@@ -5,16 +5,14 @@ import org.example.megasegashop.inventory.event.ProductDeletedEvent;
 import org.example.megasegashop.inventory.event.ProductUpdatedEvent;
 import org.example.megasegashop.inventory.entity.InventoryItem;
 import org.example.megasegashop.inventory.repository.InventoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Component
 public class ProductEventListener {
-    private static final Logger logger = LoggerFactory.getLogger(ProductEventListener.class);
-
     private final InventoryRepository inventoryRepository;
 
     public ProductEventListener(InventoryRepository inventoryRepository) {
@@ -24,12 +22,12 @@ public class ProductEventListener {
     @KafkaListener(topics = "product.created", groupId = "inventory-service")
     @Transactional
     public void handleProductCreated(ProductCreatedEvent event) {
-        logger.info("Received ProductCreatedEvent: productId={}, name={}, quantity={}",
+        log.info("Received ProductCreatedEvent: productId={}, name={}, quantity={}",
                 event.productId(), event.productName(), event.initialQuantity());
 
         // Check if inventory item already exists (idempotency)
         if (inventoryRepository.findByProductId(event.productId()).isPresent()) {
-            logger.warn("InventoryItem for productId={} already exists, skipping", event.productId());
+            log.warn("InventoryItem for productId={} already exists, skipping", event.productId());
             return;
         }
 
@@ -40,7 +38,7 @@ public class ProductEventListener {
         );
 
         inventoryRepository.save(item);
-        logger.info("Created InventoryItem for productId={} with quantity={}",
+        log.info("Created InventoryItem for productId={} with quantity={}",
                 event.productId(), event.initialQuantity());
     }
 
@@ -51,7 +49,7 @@ public class ProductEventListener {
     )
     @Transactional
     public void handleProductUpdated(ProductUpdatedEvent event) {
-        logger.info("Received ProductUpdatedEvent: productId={}, name={}, delta={}",
+        log.info("Received ProductUpdatedEvent: productId={}, name={}, delta={}",
                 event.productId(), event.productName(), event.inventoryDelta());
 
         InventoryItem item = inventoryRepository.findWithLockByProductId(event.productId())
@@ -59,13 +57,13 @@ public class ProductEventListener {
 
         int updatedQuantity = item.getAvailableQuantity() + event.inventoryDelta();
         if (updatedQuantity < 0) {
-            logger.warn("Inventory delta would make quantity negative for productId={}, clamping to 0",
+            log.warn("Inventory delta would make quantity negative for productId={}, clamping to 0",
                     event.productId());
             updatedQuantity = 0;
         }
         item.setAvailableQuantity(updatedQuantity);
         inventoryRepository.save(item);
-        logger.info("Inventory updated for productId={} to quantity={}",
+        log.info("Inventory updated for productId={} to quantity={}",
                 event.productId(), updatedQuantity);
     }
 
@@ -76,7 +74,7 @@ public class ProductEventListener {
     )
     @Transactional
     public void handleProductDeleted(ProductDeletedEvent event) {
-        logger.info("Received ProductDeletedEvent: productId={}, name={}",
+        log.info("Received ProductDeletedEvent: productId={}, name={}",
                 event.productId(), event.productName());
 
         if (event.productId() == null) {
@@ -84,11 +82,11 @@ public class ProductEventListener {
         }
 
         if (inventoryRepository.findByProductId(event.productId()).isEmpty()) {
-            logger.info("Inventory item already removed for productId={}", event.productId());
+            log.info("Inventory item already removed for productId={}", event.productId());
             return;
         }
 
         inventoryRepository.deleteByProductId(event.productId());
-        logger.info("Inventory item deleted for productId={}", event.productId());
+        log.info("Inventory item deleted for productId={}", event.productId());
     }
 }

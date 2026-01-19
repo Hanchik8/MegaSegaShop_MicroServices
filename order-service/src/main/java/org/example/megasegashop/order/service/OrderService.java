@@ -5,9 +5,9 @@ import org.example.megasegashop.order.client.InventoryClient;
 import org.example.megasegashop.order.client.UserProfileClient;
 import org.example.megasegashop.order.dto.CartItemSnapshot;
 import org.example.megasegashop.order.dto.CartSnapshot;
-import org.example.megasegashop.order.dto.InventoryItemRequest;
-import org.example.megasegashop.order.dto.InventoryReserveRequest;
-import org.example.megasegashop.order.dto.InventoryReserveResponse;
+import org.example.megasegashop.shared.dto.InventoryItemRequest;
+import org.example.megasegashop.shared.dto.InventoryReserveRequest;
+import org.example.megasegashop.shared.dto.InventoryReserveResponse;
 import org.example.megasegashop.order.dto.OrderItemResponse;
 import org.example.megasegashop.order.dto.OrderResponse;
 import org.example.megasegashop.order.dto.PlaceOrderRequest;
@@ -18,8 +18,7 @@ import org.example.megasegashop.order.entity.OrderItem;
 import org.example.megasegashop.order.event.OrderCancelledEvent;
 import org.example.megasegashop.order.event.OrderPlacedEvent;
 import org.example.megasegashop.order.repository.OrderRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -30,9 +29,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class OrderService {
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private static final String ORDER_PLACED_TOPIC = "order.placed";
     private static final String ORDER_CANCELLED_TOPIC = "order.cancelled";
 
@@ -95,8 +94,6 @@ public class OrderService {
         }
 
         // From this point, we need compensating transactions if anything fails
-        boolean inventoryReserved = true;
-        
         try {
             // Step 3: Create and save order
             Order order = createOrder(request, cart);
@@ -108,7 +105,7 @@ public class OrderService {
                         new OrderPlacedEvent(saved.getId(), request.email(), phone, saved.getTotalAmount()))
                         .get(); // Wait for confirmation
             } catch (Exception kafkaEx) {
-                logger.error("Failed to send Kafka event for order {}: {}", saved.getId(), kafkaEx.getMessage());
+                log.error("Failed to send Kafka event for order {}: {}", saved.getId(), kafkaEx.getMessage());
                 // Kafka failure is not critical for order success - order is saved
                 // In production, consider using Transactional Outbox pattern
             }
@@ -117,7 +114,7 @@ public class OrderService {
             try {
                 cartClient.clearCart(request.userId());
             } catch (Exception cartEx) {
-                logger.error("Failed to clear cart for user {}: {}", request.userId(), cartEx.getMessage());
+                log.error("Failed to clear cart for user {}: {}", request.userId(), cartEx.getMessage());
                 // Cart clearing failure is not critical - order is already placed
             }
 
@@ -125,16 +122,14 @@ public class OrderService {
 
         } catch (Exception ex) {
             // Compensating transaction: release reserved inventory
-            if (inventoryReserved) {
-                logger.warn("Order creation failed, executing compensating transaction to release inventory");
-                try {
-                    inventoryClient.release(reserveRequest);
-                    logger.info("Inventory released successfully");
-                } catch (Exception releaseEx) {
-                    logger.error("CRITICAL: Failed to release inventory during compensation: {}", 
-                            releaseEx.getMessage());
-                    // In production, this should trigger an alert and manual intervention
-                }
+            log.warn("Order creation failed, executing compensating transaction to release inventory");
+            try {
+                inventoryClient.release(reserveRequest);
+                log.info("Inventory released successfully");
+            } catch (Exception releaseEx) {
+                log.error("CRITICAL: Failed to release inventory during compensation: {}", 
+                        releaseEx.getMessage());
+                // In production, this should trigger an alert and manual intervention
             }
             
             // Re-throw the original exception
@@ -178,7 +173,7 @@ public class OrderService {
                 return profile.phone();
             }
         } catch (Exception ex) {
-            logger.warn("Unable to resolve phone for user {}: {}", userId, ex.getMessage());
+            log.warn("Unable to resolve phone for user {}: {}", userId, ex.getMessage());
         }
         return null;
     }
@@ -229,7 +224,7 @@ public class OrderService {
         try {
             inventoryClient.release(releaseRequest);
         } catch (Exception ex) {
-            logger.error("Failed to release inventory for order {}: {}", orderId, ex.getMessage());
+            log.error("Failed to release inventory for order {}: {}", orderId, ex.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Inventory service unavailable");
         }
 
@@ -249,7 +244,7 @@ public class OrderService {
                     )
             ).get();
         } catch (Exception kafkaEx) {
-            logger.error("Failed to send order cancellation event for order {}: {}", saved.getId(), kafkaEx.getMessage());
+            log.error("Failed to send order cancellation event for order {}: {}", saved.getId(), kafkaEx.getMessage());
         }
 
         return toResponse(saved);

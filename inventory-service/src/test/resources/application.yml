@@ -4,8 +4,11 @@ spring:
   cloud:
     config:
       enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
   datasource:
-    url: jdbc:h2:mem:auth_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:inventory_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: ""
     driver-class-name: org.h2.Driver
@@ -18,7 +21,6 @@ eureka:
   client:
     enabled: false
 
-security:
-  jwt:
-    secret: test-secret-012345678901234567890123456789
-    expiration-minutes: 60
+inventory:
+  seed:
+    enabled: false

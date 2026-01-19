@@ -18,6 +18,9 @@
         <spring-cloud.version>2023.0.5</spring-cloud.version>
     </properties>
     <modules>
+        <module>.shared/shared-security</module>
+        <module>.shared/shared-web</module>
+        <module>.shared/shared-dto</module>
         <module>config-server</module>
         <module>discovery-server</module>
         <module>api-gateway</module>
@@ -37,6 +40,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-tracing-bom</artifactId>
+                <version>1.2.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

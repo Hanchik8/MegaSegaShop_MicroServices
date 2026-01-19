@@ -4,7 +4,7 @@ import org.example.megasegashop.product.model.Category;
 import org.example.megasegashop.product.model.Product;
 import org.example.megasegashop.product.repository.CategoryRepository;
 import org.example.megasegashop.product.repository.ProductRepository;
-import org.example.megasegashop.product.service.product.IProductService;
+import org.example.megasegashop.product.service.product.ProductService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +16,12 @@ import java.util.List;
 public class ProductDataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final IProductService productService;
+    private final ProductService productService;
 
     public ProductDataSeeder(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
-            IProductService productService
+            ProductService productService
     ) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
