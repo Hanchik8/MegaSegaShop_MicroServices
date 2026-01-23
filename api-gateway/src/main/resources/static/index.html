@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/assets/styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
     <div class="page">
       <header class="site-header">
         <div class="brand">
@@ -39,7 +40,7 @@
         </div>
       </header>
 
-      <main>
+      <main id="main">
         <section class="hero" id="story">
           <div class="hero-copy">
             <div class="pill">Live: product-service sync</div>
@@ -109,9 +110,9 @@
           </div>
 
           <div class="catalog-meta">
-            <div id="catalogCount">Loading products...</div>
+            <div id="catalogCount" role="status" aria-live="polite">Loading products...</div>
             <div class="catalog-actions">
-              <div id="catalogStatus" class="status-pill">Contacting product-service</div>
+              <div id="catalogStatus" class="status-pill" role="status" aria-live="polite">Contacting product-service</div>
               <button id="catalogReloadButton" class="button ghost small" type="button">Retry</button>
             </div>
           </div>
@@ -192,7 +193,7 @@
                 </label>
                 <button class="button primary" type="submit">Register</button>
               </form>
-              <div id="authMessage" class="message"></div>
+              <div id="authMessage" class="message" role="status" aria-live="polite"></div>
             </div>
 
             <div class="card">
@@ -225,7 +226,7 @@
               <div class="card-actions">
                 <button id="refreshProfileButton" class="button secondary" type="button">Refresh profile</button>
               </div>
-              <div id="profileInfo" class="message"></div>
+              <div id="profileInfo" class="message" role="status" aria-live="polite"></div>
             </div>
 
             <div class="card">
@@ -250,7 +251,7 @@
                   <button id="profileFillButton" class="button ghost" type="button">Load current profile</button>
                 </div>
               </form>
-              <div id="profileUpdateMessage" class="message"></div>
+              <div id="profileUpdateMessage" class="message" role="status" aria-live="polite"></div>
             </div>
           </div>
         </section>
@@ -269,7 +270,7 @@
           <div class="section-grid cart-grid">
             <div class="card">
               <div id="cartItems" class="list">Sign in to see your cart.</div>
-              <div id="cartMessage" class="message"></div>
+              <div id="cartMessage" class="message" role="status" aria-live="polite"></div>
             </div>
             <div class="card summary">
               <h3>Summary</h3>
@@ -321,8 +322,8 @@
                 </div>
                 <button class="button primary" type="submit">Pay and place order</button>
               </form>
-              <div id="paymentMessage" class="message"></div>
-              <div id="orderMessage" class="message"></div>
+              <div id="paymentMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="orderMessage" class="message" role="status" aria-live="polite"></div>
             </div>
             <div class="card">
               <h3>Order tracking</h3>
@@ -333,7 +334,7 @@
                 </label>
                 <button id="orderTrackButton" class="button secondary" type="button">Track order</button>
               </div>
-              <div id="orderResult" class="message"></div>
+              <div id="orderResult" class="message" role="status" aria-live="polite"></div>
             </div>
           </div>
         </section>
@@ -352,7 +353,7 @@
             <div class="card">
               <h3>My orders</h3>
               <div id="orderList" class="list">Sign in to view orders.</div>
-              <div id="orderListMessage" class="message"></div>
+              <div id="orderListMessage" class="message" role="status" aria-live="polite"></div>
             </div>
             <div class="card">
               <h3>Manage order</h3>
@@ -375,7 +376,7 @@
                   <button id="orderCancelButton" class="button danger" type="button">Cancel order</button>
                 </div>
               </div>
-              <div id="orderManageMessage" class="message"></div>
+              <div id="orderManageMessage" class="message" role="status" aria-live="polite"></div>
             </div>
           </div>
         </section>
@@ -421,7 +422,7 @@
                 </div>
                 <button class="button primary" type="submit">Publish product</button>
               </form>
-              <div id="productMessage" class="message"></div>
+              <div id="productMessage" class="message" role="status" aria-live="polite"></div>
             </div>
             <div class="card">
               <h3>Inventory lookup</h3>
@@ -432,7 +433,7 @@
                 </label>
                 <button id="inventoryCheckButton" class="button secondary" type="button">Check inventory</button>
               </div>
-              <div id="inventoryMessage" class="message"></div>
+              <div id="inventoryMessage" class="message" role="status" aria-live="polite"></div>
             </div>
 
             <div class="card">
@@ -476,7 +477,7 @@
                   <button id="productDeleteButton" class="button danger" type="button">Delete product</button>
                 </div>
               </form>
-              <div id="productEditMessage" class="message"></div>
+              <div id="productEditMessage" class="message" role="status" aria-live="polite"></div>
             </div>
           </div>
         </section>
@@ -518,7 +519,7 @@
               </div>
               <div class="activity">
                 <div class="activity-title">Activity log</div>
-                <div id="activityLog" class="activity-log"></div>
+                <div id="activityLog" class="activity-log" role="log" aria-live="polite" aria-relevant="additions"></div>
               </div>
             </div>
           </div>
