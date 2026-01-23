@@ -5,16 +5,16 @@
   --font-mono: "JetBrains Mono", monospace;
 
   --bg-0: #0b0f1c;
-  --bg-1: #0f1527;
-  --bg-2: #121a33;
-  --surface: rgba(16, 22, 38, 0.72);
-  --surface-strong: rgba(20, 26, 46, 0.9);
-  --surface-soft: rgba(18, 24, 40, 0.6);
-  --stroke: rgba(148, 163, 184, 0.22);
-  --stroke-strong: rgba(148, 163, 184, 0.38);
-  --shadow-lg: 0 20px 60px rgba(3, 6, 14, 0.55);
-  --shadow-md: 0 12px 28px rgba(5, 8, 18, 0.45);
-  --shadow-sm: 0 8px 18px rgba(5, 8, 18, 0.35);
+  --bg-1: #0f1429;
+  --bg-2: #141c37;
+  --surface: rgba(16, 22, 38, 0.78);
+  --surface-strong: rgba(18, 26, 46, 0.92);
+  --surface-soft: rgba(16, 22, 38, 0.55);
+  --stroke: rgba(148, 163, 184, 0.18);
+  --stroke-strong: rgba(167, 139, 250, 0.45);
+  --shadow-lg: 0 22px 60px rgba(3, 6, 14, 0.55);
+  --shadow-md: 0 12px 30px rgba(5, 8, 18, 0.45);
+  --shadow-sm: 0 8px 20px rgba(5, 8, 18, 0.35);
 
   --text: #e2e8f0;
   --text-strong: #f8fafc;
@@ -28,6 +28,12 @@
   --success: #22c55e;
   --warning: #f97316;
   --danger: #fb7185;
+
+  --glow-primary: 0 20px 40px rgba(124, 58, 237, 0.35);
+  --glow-accent: 0 18px 36px rgba(244, 63, 94, 0.32);
+  --glow-cyan: 0 16px 32px rgba(34, 211, 238, 0.3);
+  --grid-line: rgba(148, 163, 184, 0.07);
+  --scanline: rgba(15, 23, 42, 0.12);
 
   --radius-sm: 10px;
   --radius-md: 16px;
@@ -43,6 +49,7 @@
 
 html {
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -50,22 +57,61 @@ body {
   font-family: var(--font-body);
   color: var(--text);
   background:
-    radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.28), transparent 45%),
-    radial-gradient(circle at 80% 10%, rgba(34, 211, 238, 0.2), transparent 40%),
-    radial-gradient(circle at 75% 85%, rgba(244, 63, 94, 0.2), transparent 38%),
+    radial-gradient(circle at 12% 15%, rgba(124, 58, 237, 0.32), transparent 45%),
+    radial-gradient(circle at 82% 8%, rgba(34, 211, 238, 0.24), transparent 40%),
+    radial-gradient(circle at 70% 85%, rgba(244, 63, 94, 0.22), transparent 45%),
+    radial-gradient(circle at 35% 90%, rgba(251, 191, 36, 0.12), transparent 35%),
     linear-gradient(135deg, var(--bg-0) 0%, var(--bg-2) 100%);
   min-height: 100vh;
   line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    var(--scanline) 2px,
+    var(--scanline) 3px
+  );
+  opacity: 0.2;
+  mix-blend-mode: soft-light;
+  z-index: 2;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 a,
 button {
   cursor: pointer;
+}
+
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: 20px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text-strong);
+  border: 1px solid var(--stroke-strong);
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 16px;
 }
 
 button,
@@ -99,6 +145,8 @@ section {
   padding: 32px clamp(20px, 4vw, 72px) 40px;
   max-width: 1280px;
   margin: 0 auto;
+  z-index: 1;
+  isolation: isolate;
 }
 
 .page::before {
@@ -106,11 +154,11 @@ section {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 120px 120px;
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 140px 140px;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .page::after {
@@ -135,10 +183,10 @@ section {
   justify-content: space-between;
   gap: 24px;
   padding: 14px 20px;
-  background: rgba(11, 16, 32, 0.75);
-  border: 1px solid var(--stroke);
+  background: linear-gradient(140deg, rgba(12, 18, 35, 0.92), rgba(12, 18, 35, 0.65));
+  border: 1px solid rgba(124, 58, 237, 0.28);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   backdrop-filter: blur(18px) saturate(1.2);
 }
 
@@ -159,7 +207,7 @@ section {
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: #fff;
   letter-spacing: 1px;
-  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.35);
+  box-shadow: var(--glow-primary);
 }
 
 .brand-title {
@@ -167,6 +215,7 @@ section {
   font-weight: 700;
   font-family: var(--font-display);
   letter-spacing: 0.6px;
+  text-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
 }
 
 .brand-subtitle {
@@ -177,24 +226,28 @@ section {
 .nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 8px;
+  font-size: 0.85rem;
 }
 
 .nav a {
   color: var(--text-muted);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid transparent;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-size: 0.78rem;
 }
 
 .nav a:hover {
   color: var(--text-strong);
   border-color: var(--stroke);
   background: rgba(124, 58, 237, 0.16);
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.2);
 }
 
 .header-actions {
@@ -209,11 +262,12 @@ section {
   gap: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(124, 58, 237, 0.16);
-  border: 1px solid rgba(124, 58, 237, 0.4);
+  background: rgba(124, 58, 237, 0.18);
+  border: 1px solid rgba(124, 58, 237, 0.45);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-strong);
+  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.18);
 }
 
 .cart-pill span {
@@ -238,13 +292,16 @@ section {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
-  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  box-shadow: var(--glow-accent);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 44px;
 }
 
 .cta-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(124, 58, 237, 0.45);
+  box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.4), var(--glow-accent);
 }
 
 .hero {
@@ -255,9 +312,9 @@ section {
   position: relative;
   padding: 32px;
   border-radius: var(--radius-xl);
-  border: 1px solid var(--stroke);
+  border: 1px solid rgba(124, 58, 237, 0.32);
   background:
-    linear-gradient(140deg, rgba(124, 58, 237, 0.2) 0%, rgba(34, 211, 238, 0.12) 60%),
+    linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(34, 211, 238, 0.16) 60%, rgba(244, 63, 94, 0.12) 100%),
     var(--surface);
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(20px) saturate(1.2);
@@ -313,6 +370,7 @@ section {
   margin: 16px 0;
   line-height: 1.1;
   color: var(--text-strong);
+  text-shadow: 0 0 24px rgba(124, 58, 237, 0.35);
 }
 
 .hero p {
@@ -339,6 +397,7 @@ section {
   font-weight: 600;
   border: 1px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  min-height: 44px;
 }
 
 .primary,
@@ -346,27 +405,27 @@ section {
   padding: 12px 20px;
   background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
   color: #fff;
-  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.35);
+  box-shadow: var(--glow-accent);
 }
 
 .primary:hover,
 .button.primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(124, 58, 237, 0.45);
+  box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.35), var(--glow-accent);
 }
 
 .ghost,
 .button.ghost {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--stroke);
+  background: rgba(12, 18, 35, 0.85);
+  border: 1px solid rgba(124, 58, 237, 0.2);
   color: var(--text-strong);
   backdrop-filter: blur(10px);
 }
 
 .ghost:hover,
 .button.ghost:hover {
-  border-color: var(--stroke-strong);
-  background: rgba(18, 26, 46, 0.85);
+  border-color: rgba(124, 58, 237, 0.4);
+  background: rgba(18, 26, 46, 0.9);
 }
 
 .button {
@@ -379,6 +438,7 @@ section {
   color: var(--text-strong);
   border: 1px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  min-height: 44px;
 }
 
 .button.secondary {
@@ -389,6 +449,8 @@ section {
 
 .button.secondary:hover {
   background: rgba(34, 211, 238, 0.22);
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: var(--glow-cyan);
 }
 
 .button.danger {
@@ -399,6 +461,8 @@ section {
 
 .button.danger:hover {
   background: rgba(244, 63, 94, 0.24);
+  border-color: rgba(244, 63, 94, 0.65);
+  box-shadow: var(--glow-accent);
 }
 
 .hero-stats {
@@ -411,8 +475,8 @@ section {
 .hero-stats div {
   padding: 12px 14px;
   border-radius: var(--radius-sm);
-  background: rgba(18, 26, 46, 0.7);
-  border: 1px solid var(--stroke);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.9), rgba(10, 16, 31, 0.85));
+  border: 1px solid rgba(124, 58, 237, 0.22);
   box-shadow: var(--shadow-sm);
   text-align: left;
 }
@@ -426,6 +490,9 @@ section {
 
 .hero-stats small {
   color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 0.7rem;
 }
 
 .hero-panel {
@@ -436,14 +503,18 @@ section {
 .panel-card {
   padding: 20px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--stroke);
-  background: var(--surface-strong);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.95), rgba(10, 16, 31, 0.9));
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
 }
 
 .panel-card.highlight {
-  background: linear-gradient(150deg, rgba(124, 58, 237, 0.2), rgba(34, 211, 238, 0.16));
+  background: linear-gradient(150deg, rgba(124, 58, 237, 0.28), rgba(34, 211, 238, 0.2));
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: var(--shadow-md), var(--glow-cyan);
 }
 
 .panel-title {
@@ -498,6 +569,19 @@ section {
   font-size: 2rem;
   margin-bottom: 6px;
   color: var(--text-strong);
+  text-shadow: 0 0 18px rgba(124, 58, 237, 0.25);
+  position: relative;
+  display: inline-block;
+}
+
+.section-head h2::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
 .section-head p {
@@ -509,6 +593,7 @@ section {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  align-items: flex-end;
 }
 
 .filter {
@@ -536,6 +621,12 @@ section {
   margin: 20px 0;
   font-weight: 500;
   color: var(--text-muted);
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(18, 26, 46, 0.55);
+  border: 1px solid rgba(124, 58, 237, 0.18);
 }
 
 .catalog-actions {
@@ -551,6 +642,9 @@ section {
   color: #c3f5ff;
   font-size: 0.85rem;
   border: 1px solid rgba(34, 211, 238, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
 }
 
 .status-pill[data-state="error"] {
@@ -577,21 +671,36 @@ section {
   gap: 22px;
 }
 
+.empty-state {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(124, 58, 237, 0.35);
+  background: rgba(18, 26, 46, 0.6);
+  color: var(--text-muted);
+  text-align: center;
+}
+
 .product-card {
   position: relative;
   padding: 18px 18px 16px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--stroke);
-  background: var(--surface-strong);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.95), rgba(10, 16, 31, 0.9));
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 260px;
+  overflow: hidden;
   opacity: 0;
   transform: translateY(18px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .product-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  border-color: rgba(124, 58, 237, 0.45);
 }
 
 .product-card.is-visible {
@@ -645,6 +754,8 @@ section {
   background: rgba(124, 58, 237, 0.2);
   color: #ede9fe;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .inventory {
@@ -659,16 +770,18 @@ section {
 }
 
 .inventory-bar {
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
-  background: rgba(148, 163, 184, 0.2);
+  background: rgba(148, 163, 184, 0.18);
   overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
 }
 
 .inventory-bar div {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
 }
 
 .skeleton {
@@ -719,14 +832,18 @@ section {
 .card {
   padding: 22px;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--stroke);
-  background: var(--surface-strong);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.92), rgba(10, 16, 31, 0.88));
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(14px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .card.summary {
-  background: linear-gradient(150deg, rgba(124, 58, 237, 0.18), rgba(34, 211, 238, 0.14));
+  background: linear-gradient(150deg, rgba(124, 58, 237, 0.25), rgba(34, 211, 238, 0.18));
+  border-color: rgba(34, 211, 238, 0.35);
 }
 
 .card-header {
@@ -760,6 +877,7 @@ section {
   cursor: pointer;
   color: var(--text-soft);
   transition: background 0.2s ease, color 0.2s ease;
+  min-height: 40px;
 }
 
 .tab.active {
@@ -806,6 +924,12 @@ section {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+.field input:hover,
+.field textarea:hover,
+.field select:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+}
+
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
@@ -821,9 +945,9 @@ section {
   margin-top: 12px;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  background: rgba(12, 18, 35, 0.75);
+  background: rgba(12, 18, 35, 0.85);
   color: var(--text-muted);
-  border: 1px solid var(--stroke);
+  border: 1px solid rgba(124, 58, 237, 0.2);
   min-height: 24px;
   font-size: 0.9rem;
   white-space: pre-line;
@@ -855,6 +979,7 @@ section {
   display: grid;
   gap: 12px;
   margin: 16px 0 8px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
 .session-grid span {
@@ -882,8 +1007,8 @@ section {
   align-items: center;
   padding: 12px;
   border-radius: var(--radius-md);
-  background: rgba(18, 26, 46, 0.7);
-  border: 1px solid var(--stroke);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.9), rgba(10, 16, 31, 0.85));
+  border: 1px solid rgba(124, 58, 237, 0.2);
 }
 
 .cart-item-title {
@@ -896,7 +1021,12 @@ section {
 }
 
 .cart-item input {
-  width: 70px;
+  width: 84px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--stroke);
+  background: rgba(12, 18, 35, 0.9);
+  color: var(--text-strong);
 }
 
 .summary-row {
@@ -908,7 +1038,8 @@ section {
 }
 
 .product-card .card-actions {
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 .product-card .button {
@@ -944,6 +1075,7 @@ section {
 .order-pill:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  border-color: rgba(124, 58, 237, 0.4);
 }
 
 .order-pill span {
@@ -974,8 +1106,8 @@ section {
 .ops-card {
   padding: 28px;
   border-radius: var(--radius-lg);
-  background: rgba(18, 26, 46, 0.85);
-  border: 1px solid var(--stroke);
+  background: linear-gradient(160deg, rgba(18, 26, 46, 0.92), rgba(10, 16, 31, 0.88));
+  border: 1px solid rgba(124, 58, 237, 0.18);
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(14px);
 }
@@ -984,6 +1116,7 @@ section {
   font-family: var(--font-display);
   font-size: 1.6rem;
   margin-bottom: 12px;
+  text-shadow: 0 0 18px rgba(124, 58, 237, 0.25);
 }
 
 .ops-grid {
@@ -1002,8 +1135,8 @@ section {
 .ops-panel {
   padding: 26px;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--stroke);
-  background: linear-gradient(140deg, rgba(18, 26, 46, 0.9), rgba(12, 18, 35, 0.9));
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  background: linear-gradient(140deg, rgba(18, 26, 46, 0.92), rgba(12, 18, 35, 0.92));
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(14px);
 }
@@ -1030,6 +1163,20 @@ section {
   max-height: 220px;
   overflow-y: auto;
   padding-right: 6px;
+}
+
+.activity-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activity-log::-webkit-scrollbar-track {
+  background: rgba(12, 18, 35, 0.6);
+  border-radius: 999px;
+}
+
+.activity-log::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.35);
+  border-radius: 999px;
 }
 
 .activity-entry {
@@ -1076,12 +1223,15 @@ section {
 .tab:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .button.small {
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.8rem;
+  min-height: 32px;
 }
 
 .site-footer {
@@ -1091,10 +1241,20 @@ section {
   align-items: center;
   color: var(--text-soft);
   font-size: 0.85rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  padding-top: 16px;
 }
 
 .footer-meta {
   font-family: var(--font-mono);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(124, 58, 237, 0.35);
+  }
 }
 
 @media (max-width: 1080px) {
@@ -1106,6 +1266,10 @@ section {
   .header-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .nav {
+    width: 100%;
   }
 }
 
@@ -1139,6 +1303,29 @@ section {
 
   .nav {
     width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .nav a {
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+
+  .nav::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .nav::-webkit-scrollbar-track {
+    background: rgba(12, 18, 35, 0.6);
+    border-radius: 999px;
+  }
+
+  .nav::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, 0.35);
+    border-radius: 999px;
   }
 
   .catalog-meta {
@@ -1165,5 +1352,9 @@ section {
   * {
     animation: none !important;
     transition: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }

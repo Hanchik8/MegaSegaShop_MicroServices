@@ -91,6 +91,7 @@ const state = {
   lastOrderId: null,
   lastProductId: null,
 };
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function loadSession() {
   try {
@@ -159,7 +160,7 @@ function logActivity(message, stateType) {
 function requireSession(message, element) {
   if (!state.session || !state.session.token) {
     setMessage(element || authMessage, message || "Please sign in first.", "warn");
-    document.getElementById("account").scrollIntoView({ behavior: "smooth" });
+    document.getElementById("account").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
     return false;
   }
   return true;
@@ -373,6 +374,7 @@ function renderProducts(products) {
 
   if (!products.length) {
     const empty = document.createElement("div");
+    empty.className = "empty-state";
     empty.textContent = "No products match the selected filters.";
     grid.appendChild(empty);
     countEl.textContent = "0 products";
@@ -428,6 +430,7 @@ async function loadProducts() {
     grid.classList.remove("loading");
     grid.innerHTML = "";
     const message = document.createElement("div");
+    message.className = "empty-state";
     message.textContent = "Catalog is unavailable. Check product-service logs.";
     grid.appendChild(message);
     countEl.textContent = "0 products";
@@ -669,6 +672,7 @@ function renderCart(cart) {
     qty.min = "1";
     qty.value = item.quantity;
     qty.dataset.productId = item.productId;
+    qty.setAttribute("aria-label", `Quantity for ${item.productName}`);
 
     const lineTotal = document.createElement("div");
     lineTotal.textContent = currency.format(Number(item.lineTotal || 0));
