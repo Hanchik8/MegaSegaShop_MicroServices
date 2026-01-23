@@ -65,7 +65,7 @@ public class ProductService {
 
         ProductDeletedEvent event = new ProductDeletedEvent(product.getId(), product.getName());
         productDeletedKafkaTemplate.send(PRODUCT_DELETED_TOPIC, event);
-        logger.info("Product deleted: id={}, name={}", product.getId(), product.getName());
+        log.info("Product deleted: id={}, name={}", product.getId(), product.getName());
     }
 
     @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)

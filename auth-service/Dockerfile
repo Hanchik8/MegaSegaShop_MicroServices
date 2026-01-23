@@ -5,8 +5,16 @@ COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw mvnw
 COPY mvnw.cmd mvnw.cmd
+
+# Copy shared modules
+COPY .shared .shared
+
 COPY auth-service/pom.xml auth-service/pom.xml
-RUN chmod +x mvnw && ./mvnw -q -f auth-service/pom.xml -DskipTests dependency:go-offline
+
+# Build shared modules first, then resolve dependencies
+RUN chmod +x mvnw && \
+    ./mvnw -q -pl .shared/shared-security,.shared/shared-web,.shared/shared-dto install -DskipTests && \
+    ./mvnw -q -f auth-service/pom.xml -DskipTests dependency:go-offline
 
 COPY auth-service/src auth-service/src
 RUN ./mvnw -q -f auth-service/pom.xml -DskipTests package
@@ -15,4 +23,3 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /workspace/auth-service/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app/app.jar"]
-
