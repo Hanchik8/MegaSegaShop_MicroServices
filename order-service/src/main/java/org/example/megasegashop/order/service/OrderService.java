@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -103,7 +104,7 @@ public class OrderService {
             try {
                 orderPlacedKafkaTemplate.send(ORDER_PLACED_TOPIC, 
                         new OrderPlacedEvent(saved.getId(), request.email(), phone, saved.getTotalAmount()))
-                        .get(); // Wait for confirmation
+                        .get(5, TimeUnit.SECONDS);
             } catch (Exception kafkaEx) {
                 log.error("Failed to send Kafka event for order {}: {}", saved.getId(), kafkaEx.getMessage());
                 // Kafka failure is not critical for order success - order is saved
@@ -242,7 +243,7 @@ public class OrderService {
                             phone,
                             saved.getTotalAmount()
                     )
-            ).get();
+            ).get(5, TimeUnit.SECONDS);
         } catch (Exception kafkaEx) {
             log.error("Failed to send order cancellation event for order {}: {}", saved.getId(), kafkaEx.getMessage());
         }

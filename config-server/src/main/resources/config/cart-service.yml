@@ -15,6 +15,21 @@ spring:
       hibernate:
         format_sql: true
 
+spring.cloud.openfeign:
+  circuitbreaker:
+    enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-rate-threshold: 100
+        slow-call-duration-threshold: 3s
+
 eureka:
   client:
     service-url:

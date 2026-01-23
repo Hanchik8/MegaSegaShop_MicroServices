@@ -14,9 +14,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -31,6 +33,7 @@ public class ProductService {
     private final KafkaTemplate<String, ProductUpdatedEvent> productUpdatedKafkaTemplate;
     private final KafkaTemplate<String, ProductDeletedEvent> productDeletedKafkaTemplate;
 
+    @Transactional
     @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
     public Product addProduct(Product product, int initialQuantity) {
         Product saved = productRepository.save(product);
@@ -56,6 +59,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found..."));
     }
 
+    @Transactional
     @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
     public void deleteProductById(Long id) {
         Product product = productRepository.findById(id)
@@ -68,6 +72,7 @@ public class ProductService {
         log.info("Product deleted: id={}, name={}", product.getId(), product.getName());
     }
 
+    @Transactional
     @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
     public Product updateProduct(Long id, ProductUpdateRequest request, Category category) {
         Product existing = productRepository.findById(id)
@@ -75,15 +80,15 @@ public class ProductService {
 
         boolean changed = false;
 
-        if (!existing.getName().equals(request.name())) {
+        if (!Objects.equals(existing.getName(), request.name())) {
             existing.setName(request.name());
             changed = true;
         }
-        if (!existing.getBrand().equals(request.brand())) {
+        if (!Objects.equals(existing.getBrand(), request.brand())) {
             existing.setBrand(request.brand());
             changed = true;
         }
-        if (!existing.getDescription().equals(request.description())) {
+        if (!Objects.equals(existing.getDescription(), request.description())) {
             existing.setDescription(request.description());
             changed = true;
         }
