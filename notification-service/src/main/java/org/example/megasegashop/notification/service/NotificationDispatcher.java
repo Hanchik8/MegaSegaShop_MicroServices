@@ -13,6 +13,8 @@ import org.springframework.web.client.RestClient;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.net.URI;
+import java.util.Locale;
 
 @Slf4j
 @Component
@@ -101,25 +103,19 @@ public class NotificationDispatcher {
         }
 
         try {
-            WebhookPayload payload = new WebhookPayload(
-                    "order.placed",
-                    event.orderId(),
-                    event.email(),
-                    event.totalAmount(),
-                    Instant.now().toString()
-            );
-
-            RestClient.RequestHeadersSpec<?> request = restClient.post()
-                    .uri(url)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(payload);
-
-            if (StringUtils.hasText(properties.getWebhook().getSecret())) {
-                request.header("X-Webhook-Secret", properties.getWebhook().getSecret());
+            if (isDiscordWebhook(url)) {
+                postWebhook(url, new DiscordWebhookPayload(buildDiscordContent(event)));
+            } else {
+                WebhookPayload payload = new WebhookPayload(
+                        "order.placed",
+                        event.orderId(),
+                        event.email(),
+                        event.totalAmount(),
+                        Instant.now().toString()
+                );
+                postWebhook(url, payload);
             }
-
-            request.retrieve().toBodilessEntity();
-            log.info("Webhook notification sent to {}", url);
+            log.info("Webhook notification sent to {}", redactUrl(url));
         } catch (Exception ex) {
             log.error("Failed to send webhook notification: {}", ex.getMessage());
         }
@@ -198,25 +194,19 @@ public class NotificationDispatcher {
         }
 
         try {
-            WebhookPayload payload = new WebhookPayload(
-                    "order.cancelled",
-                    event.orderId(),
-                    event.email(),
-                    event.totalAmount(),
-                    Instant.now().toString()
-            );
-
-            RestClient.RequestHeadersSpec<?> request = restClient.post()
-                    .uri(url)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(payload);
-
-            if (StringUtils.hasText(properties.getWebhook().getSecret())) {
-                request.header("X-Webhook-Secret", properties.getWebhook().getSecret());
+            if (isDiscordWebhook(url)) {
+                postWebhook(url, new DiscordWebhookPayload(buildDiscordContent(event)));
+            } else {
+                WebhookPayload payload = new WebhookPayload(
+                        "order.cancelled",
+                        event.orderId(),
+                        event.email(),
+                        event.totalAmount(),
+                        Instant.now().toString()
+                );
+                postWebhook(url, payload);
             }
-
-            request.retrieve().toBodilessEntity();
-            log.info("Cancellation webhook sent to {}", url);
+            log.info("Cancellation webhook sent to {}", redactUrl(url));
         } catch (Exception ex) {
             log.error("Failed to send cancellation webhook: {}", ex.getMessage());
         }
@@ -293,12 +283,99 @@ public class NotificationDispatcher {
         return amount != null ? amount.toPlainString() : "0";
     }
 
+    private void postWebhook(String url, Object payload) {
+        RestClient.RequestHeadersSpec<?> request = restClient.post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payload);
+
+        if (StringUtils.hasText(properties.getWebhook().getSecret())) {
+            request.header("X-Webhook-Secret", properties.getWebhook().getSecret());
+        }
+
+        request.retrieve().toBodilessEntity();
+    }
+
+    private boolean isDiscordWebhook(String url) {
+        String lower = url.toLowerCase(Locale.ROOT);
+        return lower.contains("discord.com/api/webhooks")
+                || lower.contains("discordapp.com/api/webhooks");
+    }
+
+    private String buildDiscordContent(OrderPlacedEvent event) {
+        return buildDiscordContent(
+                "Order placed",
+                event.orderId(),
+                null,
+                event.email(),
+                event.phone(),
+                event.totalAmount()
+        );
+    }
+
+    private String buildDiscordContent(OrderCancelledEvent event) {
+        return buildDiscordContent(
+                "Order cancelled",
+                event.orderId(),
+                event.userId(),
+                event.email(),
+                event.phone(),
+                event.totalAmount()
+        );
+    }
+
+    private String buildDiscordContent(
+            String header,
+            Long orderId,
+            Long userId,
+            String email,
+            String phone,
+            BigDecimal totalAmount
+    ) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(header).append('\n')
+                .append("Order ID: ").append(valueOrDash(orderId)).append('\n');
+        if (userId != null) {
+            builder.append("User ID: ").append(userId).append('\n');
+        }
+        builder.append("Email: ").append(valueOrDash(email)).append('\n')
+                .append("Phone: ").append(valueOrDash(phone)).append('\n')
+                .append("Total: ").append(formatAmount(totalAmount));
+        return builder.toString();
+    }
+
+    private String valueOrDash(String value) {
+        return StringUtils.hasText(value) ? value : "-";
+    }
+
+    private String valueOrDash(Long value) {
+        return value != null ? value.toString() : "-";
+    }
+
+    private String redactUrl(String url) {
+        try {
+            URI uri = URI.create(url);
+            if (!StringUtils.hasText(uri.getHost())) {
+                return "<redacted>";
+            }
+            String scheme = StringUtils.hasText(uri.getScheme()) ? uri.getScheme() + "://" : "";
+            return scheme + uri.getHost();
+        } catch (Exception ex) {
+            return "<redacted>";
+        }
+    }
+
     private record WebhookPayload(
             String type,
             Long orderId,
             String email,
             BigDecimal totalAmount,
             String occurredAt
+    ) {
+    }
+
+    private record DiscordWebhookPayload(
+            String content
     ) {
     }
 

@@ -5,6 +5,9 @@ const categorySelect = document.getElementById("categoryFilter");
 const brandSelect = document.getElementById("brandFilter");
 const cartCountEl = document.getElementById("cartCount");
 const catalogReloadButton = document.getElementById("catalogReloadButton");
+const searchForm = document.getElementById("catalogSearchForm");
+const searchInput = document.getElementById("catalogSearch");
+const heroChips = document.getElementById("heroChips");
 
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
@@ -90,6 +93,7 @@ const state = {
   profile: null,
   lastOrderId: null,
   lastProductId: null,
+  searchQuery: "",
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -346,41 +350,179 @@ function inventoryPercent(inventory) {
   return Math.round((clamped / 120) * 100);
 }
 
+function getStockInfo(stockValue) {
+  const numeric = Number(stockValue);
+  if (!Number.isFinite(numeric)) {
+    return {
+      label: "Stock n/a",
+      countLabel: "Stock n/a",
+      state: "unknown",
+    };
+  }
+  if (numeric <= 0) {
+    return {
+      label: "Out of stock",
+      countLabel: "Stock 0",
+      state: "out",
+    };
+  }
+  if (numeric <= 5) {
+    return {
+      label: "Low stock",
+      countLabel: `Stock ${numeric}`,
+      state: "low",
+    };
+  }
+  return {
+    label: "In stock",
+    countLabel: `Stock ${numeric}`,
+    state: "in",
+  };
+}
+
+function buildMonogram(name, brand) {
+  const source = `${name || ""} ${brand || ""}`.trim();
+  const letters = source.match(/[A-Za-z0-9]/g) || [];
+  const monogram = letters.slice(0, 2).join("").toUpperCase();
+  return monogram || "MS";
+}
+
+function normalizeSearchQuery(value) {
+  return (value || "").trim().toLowerCase();
+}
+
+function matchesSearch(product, query) {
+  if (!query) {
+    return true;
+  }
+  const haystack = [
+    product.name,
+    product.brand,
+    product.category,
+    product.description,
+  ].filter(Boolean).join(" ").toLowerCase();
+  return haystack.includes(query);
+}
+
+function updateChipActive() {
+  if (!heroChips) {
+    return;
+  }
+  const selected = categorySelect.value;
+  heroChips.querySelectorAll(".chip").forEach((chip) => {
+    const value = chip.dataset.value || "";
+    chip.classList.toggle("active", value === selected);
+  });
+}
+
+function renderHeroChips(categories) {
+  if (!heroChips) {
+    return;
+  }
+  heroChips.innerHTML = "";
+  const allChip = document.createElement("button");
+  allChip.type = "button";
+  allChip.className = "chip";
+  allChip.dataset.value = "";
+  allChip.textContent = "All";
+  allChip.addEventListener("click", () => {
+    categorySelect.value = "";
+    updateChipActive();
+    applyFilters();
+    scrollToCatalog();
+  });
+  heroChips.appendChild(allChip);
+
+  categories.forEach((category) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip";
+    chip.dataset.value = category;
+    chip.textContent = category;
+    chip.addEventListener("click", () => {
+      categorySelect.value = category;
+      updateChipActive();
+      applyFilters();
+      scrollToCatalog();
+    });
+    heroChips.appendChild(chip);
+  });
+
+  updateChipActive();
+}
+
+function scrollToCatalog() {
+  const catalog = document.getElementById("catalog");
+  if (catalog) {
+    catalog.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }
+}
+
 function buildCard(product, index) {
   const card = document.createElement("article");
   card.className = "product-card";
   card.style.setProperty("--delay", `${index * 60}ms`);
 
-  const title = document.createElement("h3");
-  title.textContent = product.name || "Unnamed product";
+  const stockInfo = getStockInfo(product.stock);
+
+  const media = document.createElement("div");
+  media.className = "product-media";
+
+  const badges = document.createElement("div");
+  badges.className = "product-badges";
+
+  const stockBadge = document.createElement("span");
+  stockBadge.className = "badge";
+  stockBadge.textContent = stockInfo.label;
+  if (stockInfo.state) {
+    stockBadge.dataset.state = stockInfo.state;
+  }
+
+  const categoryTag = document.createElement("span");
+  categoryTag.className = "tag";
+  categoryTag.textContent = product.category || "Uncategorized";
+
+  badges.appendChild(stockBadge);
+  badges.appendChild(categoryTag);
+
+  const image = document.createElement("div");
+  image.className = "product-image";
+  image.textContent = buildMonogram(product.name, product.brand);
 
   const brand = document.createElement("div");
   brand.className = "brand";
   brand.textContent = product.brand || "Independent";
 
+  media.appendChild(badges);
+  media.appendChild(image);
+  media.appendChild(brand);
+
+  const title = document.createElement("h3");
+  title.textContent = product.name || "Unnamed product";
+
   const description = document.createElement("div");
   description.className = "description";
   description.textContent = product.description || "No description available.";
 
-  const meta = document.createElement("div");
-  meta.className = "product-meta";
+  const metaRow = document.createElement("div");
+  metaRow.className = "product-meta-row";
 
-  const price = document.createElement("div");
-  price.className = "price";
-  price.textContent = currency.format(Number(product.price || 0));
+  const sku = document.createElement("span");
+  sku.textContent = product.id ? `SKU #${product.id}` : "SKU n/a";
 
-  const tag = document.createElement("div");
-  tag.className = "tag";
-  tag.textContent = product.category || "Uncategorized";
+  const stockMeta = document.createElement("span");
+  stockMeta.textContent = stockInfo.countLabel;
 
-  meta.appendChild(price);
-  meta.appendChild(tag);
+  metaRow.appendChild(sku);
+  metaRow.appendChild(stockMeta);
 
   const inventory = document.createElement("div");
   inventory.className = "inventory";
 
   const inventoryLabel = document.createElement("span");
-  inventoryLabel.textContent = `Stock: ${product.stock ?? "n/a"}`;
+  inventoryLabel.textContent = stockInfo.state === "unknown"
+    ? "Inventory unavailable"
+    : "Inventory level";
 
   const bar = document.createElement("div");
   bar.className = "inventory-bar";
@@ -391,21 +533,32 @@ function buildCard(product, index) {
   inventory.appendChild(inventoryLabel);
   inventory.appendChild(bar);
 
+  const footer = document.createElement("div");
+  footer.className = "product-footer";
+
+  const price = document.createElement("div");
+  price.className = "price";
+  price.textContent = currency.format(Number(product.price || 0));
+
   const actions = document.createElement("div");
   actions.className = "card-actions";
   const addButton = document.createElement("button");
   addButton.className = "button secondary";
-  addButton.textContent = "Add to cart";
+  addButton.textContent = stockInfo.state === "out" ? "Out of stock" : "Add to cart";
   addButton.type = "button";
+  addButton.disabled = stockInfo.state === "out";
   addButton.addEventListener("click", () => handleAddToCart(product.id));
   actions.appendChild(addButton);
 
+  footer.appendChild(price);
+  footer.appendChild(actions);
+
+  card.appendChild(media);
   card.appendChild(title);
-  card.appendChild(brand);
   card.appendChild(description);
-  card.appendChild(meta);
+  card.appendChild(metaRow);
   card.appendChild(inventory);
-  card.appendChild(actions);
+  card.appendChild(footer);
 
   requestAnimationFrame(() => {
     card.classList.add("is-visible");
@@ -437,6 +590,7 @@ function renderProducts(products) {
 function applyFilters() {
   const category = categorySelect.value;
   const brand = brandSelect.value;
+  const query = normalizeSearchQuery(state.searchQuery);
 
   let filtered = state.products;
   if (category) {
@@ -444,6 +598,9 @@ function applyFilters() {
   }
   if (brand) {
     filtered = filtered.filter((product) => product.brand === brand);
+  }
+  if (query) {
+    filtered = filtered.filter((product) => matchesSearch(product, query));
   }
   renderProducts(filtered);
 }
@@ -467,6 +624,7 @@ async function loadProducts() {
 
     buildSelectOptions(categorySelect, categories, "categories");
     buildSelectOptions(brandSelect, brands, "brands");
+    renderHeroChips(categories);
 
     setStatus("Catalog live", "success");
     logActivity(`Catalog synced (${state.products.length} products)`, "success");
@@ -1271,8 +1429,24 @@ async function quickCheckout() {
 
 bindCardInputFormatting();
 
-categorySelect.addEventListener("change", applyFilters);
+categorySelect.addEventListener("change", () => {
+  updateChipActive();
+  applyFilters();
+});
 brandSelect.addEventListener("change", applyFilters);
+if (searchInput) {
+  searchInput.addEventListener("input", (event) => {
+    state.searchQuery = event.target.value;
+    applyFilters();
+  });
+}
+if (searchForm) {
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyFilters();
+    scrollToCatalog();
+  });
+}
 
 catalogReloadButton.addEventListener("click", () => {
   setStatus("Retrying catalog", "warn");

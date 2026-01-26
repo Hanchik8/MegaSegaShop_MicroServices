@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MegaSegaShop</title>
     <meta name="description" content="MegaSegaShop storefront powered by microservices." />
-    <meta name="theme-color" content="#0b0f1c" />
+    <meta name="theme-color" content="#f8fafc" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&family=Russo+One&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Nunito+Sans:wght@300;400;600;700;800&family=Rubik:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -50,6 +50,20 @@
               is streamed from a live catalog, priced in real time, and delivered
               with arcade precision.
             </p>
+            <form class="hero-search" id="catalogSearchForm" role="search">
+              <label class="sr-only" for="catalogSearch">Search catalog</label>
+              <input
+                id="catalogSearch"
+                type="search"
+                placeholder="Search consoles, controllers, arcade kits"
+                autocomplete="off"
+              />
+              <button type="submit">Search</button>
+            </form>
+            <div class="hero-chips" aria-label="Popular categories">
+              <span class="chip-label">Popular:</span>
+              <div id="heroChips" class="chip-row"></div>
+            </div>
             <div class="hero-actions">
               <a class="primary" href="#catalog">Explore catalog</a>
               <a class="ghost" href="/actuator/health">System health</a>
@@ -552,7 +566,6 @@
 
       <footer class="site-footer">
         <div>MegaSegaShop</div>
-        <div class="footer-meta">Gateway UI powered by product-service.</div>
       </footer>
     </div>
 
