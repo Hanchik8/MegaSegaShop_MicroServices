@@ -11,6 +11,8 @@ const heroChips = document.getElementById("heroChips");
 
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
+const registerPassword = document.getElementById("registerPassword");
+const registerPasswordHint = document.getElementById("registerPasswordHint");
 const authMessage = document.getElementById("authMessage");
 const sessionStatus = document.getElementById("sessionStatus");
 const sessionUserId = document.getElementById("sessionUserId");
@@ -96,6 +98,10 @@ const state = {
   searchQuery: "",
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const passwordPolicy = {
+  pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/,
+  hint: "Password must be at least 8 characters and include at least one letter and one number. Allowed: A-Z, 0-9, @$!%*#?&.",
+};
 
 function loadSession() {
   try {
@@ -126,6 +132,23 @@ function setMessage(element, text, stateType) {
     element.dataset.state = stateType;
   } else {
     delete element.dataset.state;
+  }
+}
+
+function isPasswordValid(value) {
+  return passwordPolicy.pattern.test(value || "");
+}
+
+function setFieldValidity(input, isValid) {
+  if (!input) {
+    return;
+  }
+  if (isValid) {
+    input.removeAttribute("aria-invalid");
+    input.setCustomValidity("");
+  } else {
+    input.setAttribute("aria-invalid", "true");
+    input.setCustomValidity(passwordPolicy.hint);
   }
 }
 
@@ -692,6 +715,22 @@ async function register(event) {
   const email = document.getElementById("registerEmail").value.trim();
   const phone = document.getElementById("registerPhone").value.trim();
   const password = document.getElementById("registerPassword").value.trim();
+
+  if (!isPasswordValid(password)) {
+    setFieldValidity(registerPassword, false);
+    setMessage(authMessage, passwordPolicy.hint, "warn");
+    if (registerPasswordHint) {
+      registerPasswordHint.dataset.state = "warn";
+    }
+    if (registerPassword) {
+      registerPassword.focus();
+    }
+    return;
+  }
+  setFieldValidity(registerPassword, true);
+  if (registerPasswordHint) {
+    registerPasswordHint.dataset.state = "success";
+  }
 
   try {
     const payload = { email, password, firstName, lastName };
@@ -1455,6 +1494,23 @@ catalogReloadButton.addEventListener("click", () => {
 
 loginForm.addEventListener("submit", login);
 registerForm.addEventListener("submit", register);
+if (registerPassword) {
+  registerPassword.addEventListener("input", () => {
+    const value = registerPassword.value.trim();
+    if (!value) {
+      setFieldValidity(registerPassword, true);
+      if (registerPasswordHint) {
+        delete registerPasswordHint.dataset.state;
+      }
+      return;
+    }
+    const isValid = isPasswordValid(value);
+    setFieldValidity(registerPassword, isValid);
+    if (registerPasswordHint) {
+      registerPasswordHint.dataset.state = isValid ? "success" : "warn";
+    }
+  });
+}
 if (profileForm) {
   profileForm.addEventListener("submit", updateProfile);
 }

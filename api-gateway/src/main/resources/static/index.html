@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MegaSegaShop</title>
     <meta name="description" content="MegaSegaShop storefront powered by microservices." />
-    <meta name="theme-color" content="#f8fafc" />
+    <meta name="theme-color" content="#020024" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -203,7 +203,18 @@
                 </label>
                 <label class="field">
                   Password
-                  <input id="registerPassword" type="password" required />
+                  <input
+                    id="registerPassword"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    pattern="(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9@$!%*#?&amp;]{8,}"
+                    aria-describedby="registerPasswordHint"
+                    title="At least 8 characters with at least one letter and one number. Allowed: A-Z, 0-9, @$!%*#?&amp;."
+                  />
+                  <span id="registerPasswordHint" class="field-hint">
+                    At least 8 characters with 1 letter and 1 number. Allowed: A-Z, 0-9, @$!%*#?&amp;.
+                  </span>
                 </label>
                 <button class="button primary" type="submit">Register</button>
               </form>
