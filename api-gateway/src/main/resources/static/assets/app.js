@@ -157,6 +157,52 @@ function logActivity(message, stateType) {
   }
 }
 
+function normalizeDigits(value, maxLength) {
+  if (!value) {
+    return "";
+  }
+  const digits = value.replace(/\D/g, "");
+  if (!maxLength) {
+    return digits;
+  }
+  return digits.slice(0, maxLength);
+}
+
+function formatCardNumberInput(value) {
+  const digits = normalizeDigits(value, 19);
+  return digits.replace(/(.{4})/g, "$1 ").trim();
+}
+
+function formatExpiryInput(value) {
+  const digits = normalizeDigits(value, 4);
+  if (digits.length <= 2) {
+    return digits;
+  }
+  return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+}
+
+function formatCvcInput(value) {
+  return normalizeDigits(value, 4);
+}
+
+function bindCardInputFormatting() {
+  if (cardNumber) {
+    cardNumber.addEventListener("input", () => {
+      cardNumber.value = formatCardNumberInput(cardNumber.value);
+    });
+  }
+  if (cardExpiry) {
+    cardExpiry.addEventListener("input", () => {
+      cardExpiry.value = formatExpiryInput(cardExpiry.value);
+    });
+  }
+  if (cardCvc) {
+    cardCvc.addEventListener("input", () => {
+      cardCvc.value = formatCvcInput(cardCvc.value);
+    });
+  }
+}
+
 function requireSession(message, element) {
   if (!state.session || !state.session.token) {
     setMessage(element || authMessage, message || "Please sign in first.", "warn");
@@ -767,10 +813,10 @@ function buildPaymentPayload() {
   return {
     amount,
     currency: "USD",
-    cardNumber: cardNumber.value.trim(),
+    cardNumber: normalizeDigits(cardNumber.value, 19),
     cardHolder: cardName.value.trim(),
-    expiry: cardExpiry.value.trim(),
-    cvc: cardCvc.value.trim(),
+    expiry: formatExpiryInput(cardExpiry.value),
+    cvc: formatCvcInput(cardCvc.value),
     email: orderEmail.value.trim(),
     reference: `ui-${state.session.userId}-${Date.now()}`,
   };
@@ -827,13 +873,13 @@ function fillTestCard(variant) {
     return;
   }
   if (variant === "decline") {
-    cardNumber.value = "4000 0000 0000 0002";
+    cardNumber.value = formatCardNumberInput("4000000000000002");
   } else {
-    cardNumber.value = "4111 1111 1111 1111";
+    cardNumber.value = formatCardNumberInput("4111111111111111");
   }
   cardName.value = "Test Operator";
-  cardExpiry.value = "12/30";
-  cardCvc.value = "123";
+  cardExpiry.value = formatExpiryInput("1230");
+  cardCvc.value = formatCvcInput("123");
 }
 
 async function submitOrder() {
@@ -1222,6 +1268,8 @@ async function quickCheckout() {
     await fetchOrders();
   }
 }
+
+bindCardInputFormatting();
 
 categorySelect.addEventListener("change", applyFilters);
 brandSelect.addEventListener("change", applyFilters);

@@ -13,7 +13,10 @@ COPY api-gateway/pom.xml api-gateway/pom.xml
 
 # Build shared modules first, then resolve dependencies
 RUN chmod +x mvnw && \
-    ./mvnw -q -pl .shared/shared-security,.shared/shared-web,.shared/shared-dto install -DskipTests && \
+    ./mvnw -q -N -f pom.xml install && \
+    ./mvnw -q -f .shared/shared-security/pom.xml -DskipTests install && \
+    ./mvnw -q -f .shared/shared-web/pom.xml -DskipTests install && \
+    ./mvnw -q -f .shared/shared-dto/pom.xml -DskipTests install && \
     ./mvnw -q -f api-gateway/pom.xml -DskipTests dependency:go-offline
 
 COPY api-gateway/src api-gateway/src

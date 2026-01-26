@@ -170,7 +170,11 @@ public class OrderService {
     private String resolvePhone(Long userId) {
         try {
             UserProfileSnapshot profile = userProfileClient.getByAuthUserId(userId);
-            if (profile != null && profile.phone() != null && !profile.phone().isBlank()) {
+            if (profile == null) {
+                log.warn("User profile unavailable for user {} (fallback returned null)", userId);
+                return null;
+            }
+            if (profile.phone() != null && !profile.phone().isBlank()) {
                 return profile.phone();
             }
         } catch (Exception ex) {

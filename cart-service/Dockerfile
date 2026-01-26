@@ -13,7 +13,10 @@ COPY cart-service/pom.xml cart-service/pom.xml
 
 # Build shared modules first, then resolve dependencies
 RUN chmod +x mvnw && \
-    ./mvnw -q -pl .shared/shared-security,.shared/shared-web,.shared/shared-dto install -DskipTests && \
+    ./mvnw -q -N -f pom.xml install && \
+    ./mvnw -q -f .shared/shared-security/pom.xml -DskipTests install && \
+    ./mvnw -q -f .shared/shared-web/pom.xml -DskipTests install && \
+    ./mvnw -q -f .shared/shared-dto/pom.xml -DskipTests install && \
     ./mvnw -q -f cart-service/pom.xml -DskipTests dependency:go-offline
 
 COPY cart-service/src cart-service/src

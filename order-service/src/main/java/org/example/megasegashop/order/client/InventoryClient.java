@@ -6,7 +6,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "inventory-service", fallback = InventoryClientFallback.class)
+@FeignClient(
+        name = "inventory-service",
+        fallback = InventoryClientFallback.class,
+        configuration = InventoryClientConfig.class
+)
 public interface InventoryClient {
     @PostMapping("/inventory/reserve")
     InventoryReserveResponse reserve(@RequestBody InventoryReserveRequest request);

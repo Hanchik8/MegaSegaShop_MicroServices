@@ -24,7 +24,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "spring.cache.type=none",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.jpa.properties.hibernate.globally_quoted_identifiers=true"
+})
 class ProductServiceTest {
 
     @Autowired
@@ -47,8 +51,8 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
-        categoryRepository.deleteAll();
+        productRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
     }
 
     @Test

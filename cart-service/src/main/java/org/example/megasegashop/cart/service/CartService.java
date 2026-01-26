@@ -73,8 +73,9 @@ public class CartService {
         try {
             ProductResponse product = productClient.getProduct(productId);
             if (product == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
-                        "Product not found: " + productId);
+                log.warn("Product service fallback returned null for productId={}", productId);
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
+                        "Product service is unavailable");
             }
             log.debug("Fetched product: id={}, name={}, price={}", 
                     product.id(), product.name(), product.price());

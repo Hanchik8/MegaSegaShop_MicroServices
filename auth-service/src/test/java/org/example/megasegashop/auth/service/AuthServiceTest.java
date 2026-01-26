@@ -76,7 +76,7 @@ class AuthServiceTest {
     void register_success_returnsToken() {
         // Given
         when(userProfileClient.createProfile(any()))
-                .thenReturn(new UserProfileResponse(1L, "new@test.com", "New", "User", null));
+                .thenReturn(new UserProfileResponse(1L, 1L, "new@test.com", "New", "User", null));
 
         RegisterRequest request = new RegisterRequest(
                 "new@test.com", "Password123", "New", "User", "+1234567890"
