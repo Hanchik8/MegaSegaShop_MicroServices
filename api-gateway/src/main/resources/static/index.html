@@ -5,205 +5,214 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MegaSegaShop</title>
     <meta name="description" content="MegaSegaShop storefront powered by microservices." />
-    <meta name="theme-color" content="#020024" />
+    <meta name="theme-color" content="#0B1020" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Nunito+Sans:wght@300;400;600;700;800&family=Rubik:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="/assets/theme.css" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to main content</a>
-    <div class="page">
-      <header class="site-header">
-        <div class="brand">
-          <div class="brand-mark">MS</div>
+    <a class="ms-skip-link" href="#main">Skip to main content</a>
+
+    <header class="ms-navbar">
+      <div class="ms-container ms-nav-inner">
+        <div class="ms-brand">
+          <div class="ms-brand-mark">MS</div>
           <div>
-            <div class="brand-title">MegaSegaShop</div>
-            <div class="brand-subtitle">Arcade grade gear, curated and ready.</div>
+            <div class="ms-brand-title">MegaSegaShop</div>
+            <div class="ms-brand-subtitle">Arcade grade gear, curated and ready.</div>
           </div>
         </div>
-        <nav class="nav" aria-label="Primary">
-          <a href="#catalog">Catalog</a>
-          <a href="#account">Account</a>
-          <a href="#cart">Cart</a>
-          <a href="#checkout">Checkout</a>
-          <a href="#orders">Orders</a>
-          <a href="#admin">Admin</a>
-          <a href="#ops">Ops</a>
+        <nav class="ms-nav" aria-label="Primary">
+          <a class="ms-nav-link" href="#catalog">Catalog</a>
+          <a class="ms-nav-link" href="#account">Account</a>
+          <a class="ms-nav-link" href="#cart">Cart</a>
+          <a class="ms-nav-link" href="#checkout">Checkout</a>
+          <a class="ms-nav-link" href="#orders">Orders</a>
+          <a class="ms-nav-link" href="#admin">Admin</a>
+          <a class="ms-nav-link" href="#ops">Ops</a>
         </nav>
-        <div class="header-actions">
-          <div class="cart-pill">Cart <span id="cartCount">0</span></div>
-          <a class="cta-button" href="#catalog">Browse now</a>
+        <div class="ms-nav-actions">
+          <div class="ms-cart-pill">Cart <span id="cartCount">0</span></div>
+          <a class="ms-btn ms-btn-primary" href="#catalog">Browse now</a>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main id="main">
-        <section class="hero" id="story">
-          <div class="hero-copy">
-            <div class="pill">Live: product-service sync</div>
+    <main id="main">
+      <section class="ms-section" id="story">
+        <div class="ms-container ms-hero">
+          <div class="ms-hero-content">
+            <div class="ms-pill">Live: product-service sync</div>
             <h1>Retro power, modern reliability.</h1>
             <p>
               MegaSegaShop is a fast lane to iconic hardware and games. Every item
               is streamed from a live catalog, priced in real time, and delivered
               with arcade precision.
             </p>
-            <form class="hero-search" id="catalogSearchForm" role="search">
-              <label class="sr-only" for="catalogSearch">Search catalog</label>
+            <form class="ms-hero-search" id="catalogSearchForm" role="search">
+              <label class="ms-sr-only" for="catalogSearch">Search catalog</label>
               <input
+                class="ms-input"
                 id="catalogSearch"
                 type="search"
                 placeholder="Search consoles, controllers, arcade kits"
                 autocomplete="off"
               />
-              <button type="submit">Search</button>
+              <button class="ms-btn ms-btn-primary" type="submit">Search</button>
             </form>
-            <div class="hero-chips" aria-label="Popular categories">
-              <span class="chip-label">Popular:</span>
-              <div id="heroChips" class="chip-row"></div>
+            <div class="ms-hero-chips" aria-label="Popular categories">
+              <span class="ms-chip-label">Popular:</span>
+              <div id="heroChips" class="ms-chip-row"></div>
             </div>
-            <div class="hero-actions">
-              <a class="primary" href="#catalog">Explore catalog</a>
-              <a class="ghost" href="/actuator/health">System health</a>
+            <div class="ms-hero-actions">
+              <a class="ms-btn ms-btn-primary" href="#catalog">Explore catalog</a>
+              <a class="ms-btn ms-btn-ghost" href="/actuator/health">System health</a>
             </div>
-            <div class="hero-stats">
-              <div>
+            <div class="ms-hero-stats">
+              <div class="ms-stat-card">
                 <span>9</span>
                 <small>microservices</small>
               </div>
-              <div>
+              <div class="ms-stat-card">
                 <span>6</span>
                 <small>live databases</small>
               </div>
-              <div>
+              <div class="ms-stat-card">
                 <span>24/7</span>
                 <small>inventory sync</small>
               </div>
             </div>
           </div>
-          <div class="hero-panel">
-            <div class="panel-card">
-              <div class="panel-title">Featured bundle</div>
-              <div class="panel-name">MegaSega Classic</div>
-              <div class="panel-detail">Retro console + wired pad</div>
-              <div class="panel-price">$129.99</div>
-              <div class="panel-tag">Ships in 48h</div>
+          <div class="ms-hero-panel">
+            <div class="ms-panel-card">
+              <div class="ms-panel-title">Featured bundle</div>
+              <div class="ms-panel-name">MegaSega Classic</div>
+              <div class="ms-panel-detail">Retro console + wired pad</div>
+              <div class="ms-panel-price">$129.99</div>
+              <div class="ms-panel-tag">Ships in 48h</div>
             </div>
-            <div class="panel-card highlight">
-              <div class="panel-title">What is live?</div>
+            <div class="ms-panel-card ms-panel-card-highlight">
+              <div class="ms-panel-title">What is live?</div>
               <p>
                 This UI is served by the API gateway and pulls product data straight
                 from product-service. No mock data, no shortcuts.
               </p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="catalog" id="catalog">
-          <div class="section-head">
+      <section class="ms-section" id="catalog">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Catalog</h2>
               <p>Filter by category or brand to shape the lineup.</p>
             </div>
-            <div class="filters">
-              <label class="filter">
+            <div class="ms-filters">
+              <label class="ms-filter">
                 Category
-                <select id="categoryFilter">
+                <select class="ms-select" id="categoryFilter">
                   <option value="">All categories</option>
                 </select>
               </label>
-              <label class="filter">
+              <label class="ms-filter">
                 Brand
-                <select id="brandFilter">
+                <select class="ms-select" id="brandFilter">
                   <option value="">All brands</option>
                 </select>
               </label>
             </div>
           </div>
 
-          <div class="catalog-meta">
+          <div class="ms-catalog-meta">
             <div id="catalogCount" role="status" aria-live="polite">Loading products...</div>
-            <div class="catalog-actions">
-              <div id="catalogStatus" class="status-pill" role="status" aria-live="polite">Contacting product-service</div>
-              <button id="catalogReloadButton" class="button ghost small" type="button">Retry</button>
+            <div class="ms-catalog-actions">
+              <div id="catalogStatus" class="ms-status-pill" role="status" aria-live="polite">Contacting product-service</div>
+              <button id="catalogReloadButton" class="ms-btn ms-btn-ghost ms-btn-sm" type="button">Retry</button>
             </div>
           </div>
 
-          <div id="productGrid" class="product-grid loading">
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
+          <div id="productGrid" class="ms-product-grid loading">
+            <article class="ms-product-card ms-skeleton">
+              <div class="ms-skeleton-line"></div>
+              <div class="ms-skeleton-line wide"></div>
+              <div class="ms-skeleton-line"></div>
             </article>
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
+            <article class="ms-product-card ms-skeleton">
+              <div class="ms-skeleton-line"></div>
+              <div class="ms-skeleton-line wide"></div>
+              <div class="ms-skeleton-line"></div>
             </article>
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
+            <article class="ms-product-card ms-skeleton">
+              <div class="ms-skeleton-line"></div>
+              <div class="ms-skeleton-line wide"></div>
+              <div class="ms-skeleton-line"></div>
             </article>
-            <article class="product-card skeleton">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line wide"></div>
-              <div class="skeleton-line"></div>
+            <article class="ms-product-card ms-skeleton">
+              <div class="ms-skeleton-line"></div>
+              <div class="ms-skeleton-line wide"></div>
+              <div class="ms-skeleton-line"></div>
             </article>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="account" id="account">
-          <div class="section-head">
+      <section class="ms-section" id="account">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Account access</h2>
               <p>Register or sign in to unlock cart and checkout actions.</p>
             </div>
-            <div class="auth-switch">
-              <button class="tab active" data-mode="login" type="button">Login</button>
-              <button class="tab" data-mode="register" type="button">Register</button>
+            <div class="ms-auth-switch">
+              <button class="ms-tab active" data-mode="login" type="button">Login</button>
+              <button class="ms-tab" data-mode="register" type="button">Register</button>
             </div>
           </div>
-          <div class="section-grid">
-            <div class="card">
-              <form id="loginForm" class="form-grid">
+          <div class="ms-section-grid">
+            <div class="ms-card">
+              <form id="loginForm" class="ms-form-grid">
                 <h3>Sign in</h3>
-                <label class="field">
+                <label class="ms-field">
                   Email
-                  <input id="loginEmail" type="email" required />
+                  <input class="ms-input" id="loginEmail" type="email" required />
                 </label>
-                <label class="field">
+                <label class="ms-field">
                   Password
-                  <input id="loginPassword" type="password" required />
+                  <input class="ms-input" id="loginPassword" type="password" required />
                 </label>
-                <button class="button primary" type="submit">Login</button>
+                <button class="ms-btn ms-btn-primary" type="submit">Login</button>
               </form>
 
-              <form id="registerForm" class="form-grid hidden">
+              <form id="registerForm" class="ms-form-grid ms-hidden">
                 <h3>Create account</h3>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     First name
-                    <input id="registerFirstName" type="text" required />
+                    <input class="ms-input" id="registerFirstName" type="text" required />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Last name
-                    <input id="registerLastName" type="text" required />
+                    <input class="ms-input" id="registerLastName" type="text" required />
                   </label>
                 </div>
-                <label class="field">
+                <label class="ms-field">
                   Email
-                  <input id="registerEmail" type="email" required />
+                  <input class="ms-input" id="registerEmail" type="email" required />
                 </label>
-                <label class="field">
+                <label class="ms-field">
                   Phone (optional)
-                  <input id="registerPhone" type="tel" placeholder="+1 555 555 0123" />
+                  <input class="ms-input" id="registerPhone" type="tel" placeholder="+1 555 555 0123" />
                 </label>
-                <label class="field">
+                <label class="ms-field">
                   Password
                   <input
+                    class="ms-input"
                     id="registerPassword"
                     type="password"
                     required
@@ -212,21 +221,21 @@
                     aria-describedby="registerPasswordHint"
                     title="At least 8 characters with at least one letter and one number. Allowed: A-Z, 0-9, @$!%*#?&amp;."
                   />
-                  <span id="registerPasswordHint" class="field-hint">
+                  <span id="registerPasswordHint" class="ms-field-hint">
                     At least 8 characters with 1 letter and 1 number. Allowed: A-Z, 0-9, @$!%*#?&amp;.
                   </span>
                 </label>
-                <button class="button primary" type="submit">Register</button>
+                <button class="ms-btn ms-btn-primary" type="submit">Register</button>
               </form>
-              <div id="authMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="authMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
 
-            <div class="card">
-              <div class="card-header">
+            <div class="ms-card">
+              <div class="ms-card-header">
                 <h3>Session</h3>
-                <button id="signOutButton" class="button ghost" type="button">Sign out</button>
+                <button id="signOutButton" class="ms-btn ms-btn-ghost" type="button">Sign out</button>
               </div>
-              <div class="session-grid">
+              <div class="ms-session-grid">
                 <div>
                   <span>Status</span>
                   <strong id="sessionStatus">Signed out</strong>
@@ -248,85 +257,90 @@
                   <strong id="sessionPhone">-</strong>
                 </div>
               </div>
-              <div class="card-actions">
-                <button id="refreshProfileButton" class="button secondary" type="button">Refresh profile</button>
+              <div class="ms-card-actions">
+                <button id="refreshProfileButton" class="ms-btn ms-btn-secondary" type="button">Refresh profile</button>
               </div>
-              <div id="profileInfo" class="message" role="status" aria-live="polite"></div>
+              <div id="profileInfo" class="ms-message" role="status" aria-live="polite"></div>
             </div>
 
-            <div class="card">
-              <form id="profileForm" class="form-grid">
+            <div class="ms-card">
+              <form id="profileForm" class="ms-form-grid">
                 <h3>Profile editor</h3>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     First name
-                    <input id="profileFirstName" type="text" />
+                    <input class="ms-input" id="profileFirstName" type="text" />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Last name
-                    <input id="profileLastName" type="text" />
+                    <input class="ms-input" id="profileLastName" type="text" />
                   </label>
                 </div>
-                <label class="field">
+                <label class="ms-field">
                   Phone
-                  <input id="profilePhone" type="tel" placeholder="+1 555 555 0123" />
+                  <input class="ms-input" id="profilePhone" type="tel" placeholder="+1 555 555 0123" />
                 </label>
-                <div class="inline-actions">
-                  <button class="button secondary" type="submit">Save profile</button>
-                  <button id="profileFillButton" class="button ghost" type="button">Load current profile</button>
+                <div class="ms-inline-actions">
+                  <button class="ms-btn ms-btn-secondary" type="submit">Save profile</button>
+                  <button id="profileFillButton" class="ms-btn ms-btn-ghost" type="button">Load current profile</button>
                 </div>
               </form>
-              <div id="profileUpdateMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="profileUpdateMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="cart" id="cart">
-          <div class="section-head">
+      <section class="ms-section" id="cart">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Cart</h2>
               <p>Live cart powered by cart-service and product-service.</p>
             </div>
-            <div class="inline-actions">
-              <button id="cartRefreshButton" class="button secondary" type="button">Refresh</button>
-              <button id="cartClearButton" class="button ghost" type="button">Clear cart</button>
+            <div class="ms-inline-actions">
+              <button id="cartRefreshButton" class="ms-btn ms-btn-secondary" type="button">Refresh</button>
+              <button id="cartClearButton" class="ms-btn ms-btn-ghost" type="button">Clear cart</button>
             </div>
           </div>
-          <div class="section-grid cart-grid">
-            <div class="card">
-              <div id="cartItems" class="list">Sign in to see your cart.</div>
-              <div id="cartMessage" class="message" role="status" aria-live="polite"></div>
+          <div class="ms-section-grid ms-cart-grid">
+            <div class="ms-card">
+              <div id="cartItems" class="ms-list">Sign in to see your cart.</div>
+              <div id="cartMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
-            <div class="card summary">
+            <div class="ms-card ms-summary-card">
               <h3>Summary</h3>
-              <div class="summary-row">
+              <div class="ms-summary-row">
                 <span>Total</span>
                 <strong id="cartTotal">$0.00</strong>
               </div>
-              <a class="button primary" href="#checkout">Proceed to checkout</a>
+              <a class="ms-btn ms-btn-primary" href="#checkout">Proceed to checkout</a>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="checkout" id="checkout">
-          <div class="section-head">
+      <section class="ms-section" id="checkout">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Checkout</h2>
               <p>Place an order and reserve inventory in real time.</p>
             </div>
           </div>
-          <div class="section-grid checkout-grid">
-            <div class="card">
-              <form id="orderForm" class="form-grid">
+          <div class="ms-section-grid ms-checkout-grid">
+            <div class="ms-card">
+              <form id="orderForm" class="ms-form-grid">
                 <h3>Billing and contact</h3>
-                <label class="field">
+                <label class="ms-field">
                   Email
-                  <input id="orderEmail" type="email" required />
+                  <input class="ms-input" id="orderEmail" type="email" required />
                 </label>
-                <div class="payment-grid">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     Card number
                     <input
+                      class="ms-input"
                       id="cardNumber"
                       type="text"
                       inputmode="numeric"
@@ -336,13 +350,14 @@
                       spellcheck="false"
                     />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Name on card
-                    <input id="cardName" type="text" placeholder="A. Player" autocomplete="cc-name" />
+                    <input class="ms-input" id="cardName" type="text" placeholder="A. Player" autocomplete="cc-name" />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Expiry
                     <input
+                      class="ms-input"
                       id="cardExpiry"
                       type="text"
                       inputmode="numeric"
@@ -352,9 +367,10 @@
                       spellcheck="false"
                     />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     CVC
                     <input
+                      class="ms-input"
                       id="cardCvc"
                       type="text"
                       inputmode="numeric"
@@ -365,220 +381,224 @@
                     />
                   </label>
                 </div>
-                <div class="inline-actions">
-                  <button id="useTestCardButton" class="button ghost" type="button">Use test card</button>
-                  <button id="useDeclineCardButton" class="button ghost" type="button">Use decline card</button>
+                <div class="ms-inline-actions">
+                  <button id="useTestCardButton" class="ms-btn ms-btn-ghost" type="button">Use test card</button>
+                  <button id="useDeclineCardButton" class="ms-btn ms-btn-ghost" type="button">Use decline card</button>
                 </div>
-                <button class="button primary" type="submit">Pay and place order</button>
+                <button class="ms-btn ms-btn-primary" type="submit">Pay and place order</button>
               </form>
-              <div id="paymentMessage" class="message" role="status" aria-live="polite"></div>
-              <div id="orderMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="paymentMessage" class="ms-message" role="status" aria-live="polite"></div>
+              <div id="orderMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
-            <div class="card">
+            <div class="ms-card">
               <h3>Order tracking</h3>
-              <div class="form-grid">
-                <label class="field">
+              <div class="ms-form-grid">
+                <label class="ms-field">
                   Order ID
-                  <input id="orderTrackId" type="number" min="1" />
+                  <input class="ms-input" id="orderTrackId" type="number" min="1" />
                 </label>
-                <button id="orderTrackButton" class="button secondary" type="button">Track order</button>
+                <button id="orderTrackButton" class="ms-btn ms-btn-secondary" type="button">Track order</button>
               </div>
-              <div id="orderResult" class="message" role="status" aria-live="polite"></div>
+              <div id="orderResult" class="ms-message" role="status" aria-live="polite"></div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="orders" id="orders">
-          <div class="section-head">
+      <section class="ms-section" id="orders">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Order desk</h2>
               <p>Track, update, and cancel orders without leaving the UI.</p>
             </div>
-            <div class="inline-actions">
-              <button id="orderListButton" class="button secondary" type="button">Load my orders</button>
+            <div class="ms-inline-actions">
+              <button id="orderListButton" class="ms-btn ms-btn-secondary" type="button">Load my orders</button>
             </div>
           </div>
-          <div class="section-grid order-grid">
-            <div class="card">
+          <div class="ms-section-grid ms-order-grid">
+            <div class="ms-card">
               <h3>My orders</h3>
-              <div id="orderList" class="list">Sign in to view orders.</div>
-              <div id="orderListMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="orderList" class="ms-list">Sign in to view orders.</div>
+              <div id="orderListMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
-            <div class="card">
+            <div class="ms-card">
               <h3>Manage order</h3>
-              <div class="form-grid">
-                <label class="field">
+              <div class="ms-form-grid">
+                <label class="ms-field">
                   Order ID
-                  <input id="orderManageId" type="number" min="1" />
+                  <input class="ms-input" id="orderManageId" type="number" min="1" />
                 </label>
-                <label class="field">
+                <label class="ms-field">
                   Next status
-                  <select id="orderStatusSelect">
+                  <select class="ms-select" id="orderStatusSelect">
                     <option value="PROCESSING">PROCESSING</option>
                     <option value="SHIPPED">SHIPPED</option>
                     <option value="DELIVERED">DELIVERED</option>
                     <option value="CANCELLED">CANCELLED</option>
                   </select>
                 </label>
-                <div class="inline-actions">
-                  <button id="orderStatusButton" class="button secondary" type="button">Update status</button>
-                  <button id="orderCancelButton" class="button danger" type="button">Cancel order</button>
+                <div class="ms-inline-actions">
+                  <button id="orderStatusButton" class="ms-btn ms-btn-secondary" type="button">Update status</button>
+                  <button id="orderCancelButton" class="ms-btn ms-btn-danger" type="button">Cancel order</button>
                 </div>
               </div>
-              <div id="orderManageMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="orderManageMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="admin" id="admin">
-          <div class="section-head">
+      <section class="ms-section" id="admin">
+        <div class="ms-container">
+          <div class="ms-section-head">
             <div>
               <h2>Catalog ops</h2>
               <p>Add new products directly into product-service.</p>
             </div>
           </div>
-          <div class="section-grid">
-            <div class="card">
-              <form id="productForm" class="form-grid">
+          <div class="ms-section-grid">
+            <div class="ms-card">
+              <form id="productForm" class="ms-form-grid">
                 <h3>Create product</h3>
-                <label class="field">
+                <label class="ms-field">
                   Name
-                  <input id="productName" type="text" required />
+                  <input class="ms-input" id="productName" type="text" required />
                 </label>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     Brand
-                    <input id="productBrand" type="text" required />
+                    <input class="ms-input" id="productBrand" type="text" required />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Category
-                    <input id="productCategory" type="text" required />
+                    <input class="ms-input" id="productCategory" type="text" required />
                   </label>
                 </div>
-                <label class="field">
+                <label class="ms-field">
                   Description
-                  <textarea id="productDescription" rows="3" required></textarea>
+                  <textarea class="ms-textarea" id="productDescription" rows="3" required></textarea>
                 </label>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     Price
-                    <input id="productPrice" type="number" step="0.01" required />
+                    <input class="ms-input" id="productPrice" type="number" step="0.01" required />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Initial stock
-                    <input id="productInitialQuantity" type="number" min="0" required />
+                    <input class="ms-input" id="productInitialQuantity" type="number" min="0" required />
                   </label>
                 </div>
-                <button class="button primary" type="submit">Publish product</button>
+                <button class="ms-btn ms-btn-primary" type="submit">Publish product</button>
               </form>
-              <div id="productMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="productMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
-            <div class="card">
+            <div class="ms-card">
               <h3>Inventory lookup</h3>
-              <div class="form-grid">
-                <label class="field">
+              <div class="ms-form-grid">
+                <label class="ms-field">
                   Product ID
-                  <input id="inventoryProductId" type="number" min="1" />
+                  <input class="ms-input" id="inventoryProductId" type="number" min="1" />
                 </label>
-                <button id="inventoryCheckButton" class="button secondary" type="button">Check inventory</button>
+                <button id="inventoryCheckButton" class="ms-btn ms-btn-secondary" type="button">Check inventory</button>
               </div>
-              <div id="inventoryMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="inventoryMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
 
-            <div class="card">
-              <form id="productEditForm" class="form-grid">
+            <div class="ms-card">
+              <form id="productEditForm" class="ms-form-grid">
                 <h3>Update product</h3>
-                <label class="field">
+                <label class="ms-field">
                   Product ID
-                  <input id="productEditId" type="number" min="1" required />
+                  <input class="ms-input" id="productEditId" type="number" min="1" required />
                 </label>
-                <button id="productLoadButton" class="button ghost" type="button">Load product</button>
-                <label class="field">
+                <button id="productLoadButton" class="ms-btn ms-btn-ghost" type="button">Load product</button>
+                <label class="ms-field">
                   Name
-                  <input id="productEditName" type="text" required />
+                  <input class="ms-input" id="productEditName" type="text" required />
                 </label>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     Brand
-                    <input id="productEditBrand" type="text" required />
+                    <input class="ms-input" id="productEditBrand" type="text" required />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Category
-                    <input id="productEditCategory" type="text" required />
+                    <input class="ms-input" id="productEditCategory" type="text" required />
                   </label>
                 </div>
-                <label class="field">
+                <label class="ms-field">
                   Description
-                  <textarea id="productEditDescription" rows="3" required></textarea>
+                  <textarea class="ms-textarea" id="productEditDescription" rows="3" required></textarea>
                 </label>
-                <div class="two-col">
-                  <label class="field">
+                <div class="ms-grid ms-grid-2">
+                  <label class="ms-field">
                     Price
-                    <input id="productEditPrice" type="number" step="0.01" required />
+                    <input class="ms-input" id="productEditPrice" type="number" step="0.01" required />
                   </label>
-                  <label class="field">
+                  <label class="ms-field">
                     Inventory delta
-                    <input id="productEditDelta" type="number" step="1" />
+                    <input class="ms-input" id="productEditDelta" type="number" step="1" />
                   </label>
                 </div>
-                <div class="inline-actions">
-                  <button class="button secondary" type="submit">Save changes</button>
-                  <button id="productDeleteButton" class="button danger" type="button">Delete product</button>
+                <div class="ms-inline-actions">
+                  <button class="ms-btn ms-btn-secondary" type="submit">Save changes</button>
+                  <button id="productDeleteButton" class="ms-btn ms-btn-danger" type="button">Delete product</button>
                 </div>
               </form>
-              <div id="productEditMessage" class="message" role="status" aria-live="polite"></div>
+              <div id="productEditMessage" class="ms-message" role="status" aria-live="polite"></div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="ops" id="ops">
-          <div class="ops-layout">
-            <div class="ops-card">
-              <div class="ops-title">Architecture pulse</div>
-              <p>
-                API gateway routes to dedicated microservices for auth, users,
-                products, cart, inventory, orders, and notifications. Redis speeds
-                up catalog reads. Kafka keeps inventory in sync.
-              </p>
-              <div class="ops-grid">
-                <div>
-                  <span>Config Server</span>
-                  Centralized settings and profile control.
-                </div>
-                <div>
-                  <span>Eureka</span>
-                  Service discovery with live registry.
-                </div>
-                <div>
-                  <span>Kafka</span>
-                  Event stream for inventory updates.
-                </div>
+      <section class="ms-section" id="ops">
+        <div class="ms-container ms-ops-layout">
+          <div class="ms-ops-card">
+            <div class="ms-ops-title">Architecture pulse</div>
+            <p>
+              API gateway routes to dedicated microservices for auth, users,
+              products, cart, inventory, orders, and notifications. Redis speeds
+              up catalog reads. Kafka keeps inventory in sync.
+            </p>
+            <div class="ms-ops-grid">
+              <div>
+                <span>Config Server</span>
+                Centralized settings and profile control.
               </div>
-            </div>
-
-            <div class="ops-panel">
-              <div class="ops-title">Flow runner</div>
-              <p>Trigger common test flows with single-click actions.</p>
-              <div class="ops-actions">
-                <button id="flowSeedButton" class="button primary" type="button">Seed demo product</button>
-                <button id="flowAddButton" class="button secondary" type="button">Add featured to cart</button>
-                <button id="flowCheckoutButton" class="button ghost" type="button">Checkout cart</button>
-                <button id="flowClearButton" class="button ghost" type="button">Clear cart</button>
-                <button id="flowReloadButton" class="button ghost" type="button">Reload catalog</button>
+              <div>
+                <span>Eureka</span>
+                Service discovery with live registry.
               </div>
-              <div class="activity">
-                <div class="activity-title">Activity log</div>
-                <div id="activityLog" class="activity-log" role="log" aria-live="polite" aria-relevant="additions"></div>
+              <div>
+                <span>Kafka</span>
+                Event stream for inventory updates.
               </div>
             </div>
           </div>
-        </section>
-      </main>
 
-      <footer class="site-footer">
-        <div>MegaSegaShop</div>
-      </footer>
-    </div>
+          <div class="ms-ops-panel">
+            <div class="ms-ops-title">Flow runner</div>
+            <p>Trigger common test flows with single-click actions.</p>
+            <div class="ms-ops-actions">
+              <button id="flowSeedButton" class="ms-btn ms-btn-primary" type="button">Seed demo product</button>
+              <button id="flowAddButton" class="ms-btn ms-btn-secondary" type="button">Add featured to cart</button>
+              <button id="flowCheckoutButton" class="ms-btn ms-btn-ghost" type="button">Checkout cart</button>
+              <button id="flowClearButton" class="ms-btn ms-btn-ghost" type="button">Clear cart</button>
+              <button id="flowReloadButton" class="ms-btn ms-btn-ghost" type="button">Reload catalog</button>
+            </div>
+            <div class="ms-activity">
+              <div class="ms-activity-title">Activity log</div>
+              <div id="activityLog" class="ms-activity-log" role="log" aria-live="polite" aria-relevant="additions"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="ms-footer">
+      <div class="ms-container">MegaSegaShop</div>
+    </footer>
 
     <script src="/assets/app.js" defer></script>
   </body>

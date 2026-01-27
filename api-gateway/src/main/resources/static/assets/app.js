@@ -74,7 +74,7 @@ const productLoadButton = document.getElementById("productLoadButton");
 const productDeleteButton = document.getElementById("productDeleteButton");
 const productEditMessage = document.getElementById("productEditMessage");
 
-const authTabs = document.querySelectorAll(".auth-switch .tab");
+const authTabs = document.querySelectorAll(".ms-auth-switch .ms-tab");
 const flowSeedButton = document.getElementById("flowSeedButton");
 const flowAddButton = document.getElementById("flowAddButton");
 const flowCheckoutButton = document.getElementById("flowCheckoutButton");
@@ -166,12 +166,12 @@ function logActivity(message, stateType) {
     return;
   }
   const entry = document.createElement("div");
-  entry.className = "activity-entry";
+  entry.className = "ms-activity-entry";
   const time = document.createElement("span");
-  time.className = "activity-time";
+  time.className = "ms-activity-time";
   time.textContent = new Date().toLocaleTimeString("en-US", { hour12: false });
   const text = document.createElement("span");
-  text.className = "activity-text";
+  text.className = "ms-activity-text";
   text.textContent = message;
   entry.appendChild(time);
   entry.appendChild(text);
@@ -432,7 +432,7 @@ function updateChipActive() {
     return;
   }
   const selected = categorySelect.value;
-  heroChips.querySelectorAll(".chip").forEach((chip) => {
+  heroChips.querySelectorAll(".ms-chip").forEach((chip) => {
     const value = chip.dataset.value || "";
     chip.classList.toggle("active", value === selected);
   });
@@ -445,7 +445,7 @@ function renderHeroChips(categories) {
   heroChips.innerHTML = "";
   const allChip = document.createElement("button");
   allChip.type = "button";
-  allChip.className = "chip";
+  allChip.className = "ms-chip";
   allChip.dataset.value = "";
   allChip.textContent = "All";
   allChip.addEventListener("click", () => {
@@ -459,7 +459,7 @@ function renderHeroChips(categories) {
   categories.forEach((category) => {
     const chip = document.createElement("button");
     chip.type = "button";
-    chip.className = "chip";
+    chip.className = "ms-chip";
     chip.dataset.value = category;
     chip.textContent = category;
     chip.addEventListener("click", () => {
@@ -483,37 +483,37 @@ function scrollToCatalog() {
 
 function buildCard(product, index) {
   const card = document.createElement("article");
-  card.className = "product-card";
+  card.className = "ms-product-card";
   card.style.setProperty("--delay", `${index * 60}ms`);
 
   const stockInfo = getStockInfo(product.stock);
 
   const media = document.createElement("div");
-  media.className = "product-media";
+  media.className = "ms-product-media";
 
   const badges = document.createElement("div");
-  badges.className = "product-badges";
+  badges.className = "ms-product-badges";
 
   const stockBadge = document.createElement("span");
-  stockBadge.className = "badge";
+  stockBadge.className = "ms-badge";
   stockBadge.textContent = stockInfo.label;
   if (stockInfo.state) {
     stockBadge.dataset.state = stockInfo.state;
   }
 
   const categoryTag = document.createElement("span");
-  categoryTag.className = "tag";
+  categoryTag.className = "ms-tag";
   categoryTag.textContent = product.category || "Uncategorized";
 
   badges.appendChild(stockBadge);
   badges.appendChild(categoryTag);
 
   const image = document.createElement("div");
-  image.className = "product-image";
+  image.className = "ms-product-image";
   image.textContent = buildMonogram(product.name, product.brand);
 
   const brand = document.createElement("div");
-  brand.className = "brand";
+  brand.className = "ms-product-brand";
   brand.textContent = product.brand || "Independent";
 
   media.appendChild(badges);
@@ -524,11 +524,11 @@ function buildCard(product, index) {
   title.textContent = product.name || "Unnamed product";
 
   const description = document.createElement("div");
-  description.className = "description";
+  description.className = "ms-product-description";
   description.textContent = product.description || "No description available.";
 
   const metaRow = document.createElement("div");
-  metaRow.className = "product-meta-row";
+  metaRow.className = "ms-product-meta-row";
 
   const sku = document.createElement("span");
   sku.textContent = product.id ? `SKU #${product.id}` : "SKU n/a";
@@ -540,7 +540,7 @@ function buildCard(product, index) {
   metaRow.appendChild(stockMeta);
 
   const inventory = document.createElement("div");
-  inventory.className = "inventory";
+  inventory.className = "ms-inventory";
 
   const inventoryLabel = document.createElement("span");
   inventoryLabel.textContent = stockInfo.state === "unknown"
@@ -548,7 +548,7 @@ function buildCard(product, index) {
     : "Inventory level";
 
   const bar = document.createElement("div");
-  bar.className = "inventory-bar";
+  bar.className = "ms-inventory-bar";
   const barFill = document.createElement("div");
   barFill.style.width = `${inventoryPercent(product.stock)}%`;
   bar.appendChild(barFill);
@@ -557,16 +557,16 @@ function buildCard(product, index) {
   inventory.appendChild(bar);
 
   const footer = document.createElement("div");
-  footer.className = "product-footer";
+  footer.className = "ms-product-footer";
 
   const price = document.createElement("div");
-  price.className = "price";
+  price.className = "ms-price";
   price.textContent = currency.format(Number(product.price || 0));
 
   const actions = document.createElement("div");
-  actions.className = "card-actions";
+  actions.className = "ms-card-actions";
   const addButton = document.createElement("button");
-  addButton.className = "button secondary";
+  addButton.className = "ms-btn ms-btn-secondary";
   addButton.textContent = stockInfo.state === "out" ? "Out of stock" : "Add to cart";
   addButton.type = "button";
   addButton.disabled = stockInfo.state === "out";
@@ -596,7 +596,7 @@ function renderProducts(products) {
 
   if (!products.length) {
     const empty = document.createElement("div");
-    empty.className = "empty-state";
+    empty.className = "ms-empty-state";
     empty.textContent = "No products match the selected filters.";
     grid.appendChild(empty);
     countEl.textContent = "0 products";
@@ -657,7 +657,7 @@ async function loadProducts() {
     grid.classList.remove("loading");
     grid.innerHTML = "";
     const message = document.createElement("div");
-    message.className = "empty-state";
+    message.className = "ms-empty-state";
     message.textContent = "Catalog is unavailable. Check product-service logs.";
     grid.appendChild(message);
     countEl.textContent = "0 products";
@@ -671,11 +671,11 @@ function setAuthMode(mode) {
     tab.classList.toggle("active", tab.dataset.mode === mode);
   });
   if (mode === "register") {
-    registerForm.classList.remove("hidden");
-    loginForm.classList.add("hidden");
+    registerForm.classList.remove("ms-hidden");
+    loginForm.classList.add("ms-hidden");
   } else {
-    loginForm.classList.remove("hidden");
-    registerForm.classList.add("hidden");
+    loginForm.classList.remove("ms-hidden");
+    registerForm.classList.add("ms-hidden");
   }
 }
 
@@ -898,14 +898,14 @@ function renderCart(cart) {
   cart.items.forEach((item) => {
     count += item.quantity;
     const row = document.createElement("div");
-    row.className = "cart-item";
+    row.className = "ms-cart-item";
 
     const info = document.createElement("div");
     const title = document.createElement("div");
-    title.className = "cart-item-title";
+    title.className = "ms-cart-item-title";
     title.textContent = item.productName;
     const meta = document.createElement("div");
-    meta.className = "cart-item-meta";
+    meta.className = "ms-cart-item-meta";
     meta.textContent = `Unit: ${currency.format(Number(item.unitPrice || 0))}`;
     info.appendChild(title);
     info.appendChild(meta);
@@ -921,15 +921,15 @@ function renderCart(cart) {
     lineTotal.textContent = currency.format(Number(item.lineTotal || 0));
 
     const actions = document.createElement("div");
-    actions.className = "inline-actions";
+    actions.className = "ms-inline-actions";
     const updateBtn = document.createElement("button");
-    updateBtn.className = "button secondary";
+    updateBtn.className = "ms-btn ms-btn-secondary";
     updateBtn.type = "button";
     updateBtn.textContent = "Update";
     updateBtn.addEventListener("click", () => updateCartQuantity(item.productId, qty.value));
 
     const removeBtn = document.createElement("button");
-    removeBtn.className = "button ghost";
+    removeBtn.className = "ms-btn ms-btn-ghost";
     removeBtn.type = "button";
     removeBtn.textContent = "Remove";
     removeBtn.addEventListener("click", () => removeFromCart(item.productId));
@@ -1175,7 +1175,7 @@ function renderOrderList(orders) {
   orders.forEach((order) => {
     const item = document.createElement("button");
     item.type = "button";
-    item.className = "order-pill";
+    item.className = "ms-order-pill";
     const id = document.createElement("span");
     id.textContent = `#${order.orderId}`;
     const status = document.createElement("strong");
