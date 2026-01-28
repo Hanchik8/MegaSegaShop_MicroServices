@@ -1,0 +1,69 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< org.example:config-server >----------------------
+[INFO] Building config-server 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.6:run (default-cli) > test-compile @ config-server >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ config-server ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 18 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ config-server ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ config-server ---
+[INFO] skip non existing resourceDirectory C:\Users\ProBook\Desktop\MegaSegaShop\config-server\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ config-server ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.6:run (default-cli) < test-compile @ config-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.6:run (default-cli) @ config-server ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.6)
+
+2026-01-16T17:12:20.319+06:00  INFO 24324 --- [config-server] [           main] o.e.m.config.ConfigServerApplication     : Starting ConfigServerApplication using Java 21.0.9 with PID 24324 (C:\Users\ProBook\Desktop\MegaSegaShop\config-server\target\classes started by ProBook in C:\Users\ProBook\Desktop\MegaSegaShop\config-server)
+2026-01-16T17:12:20.321+06:00  INFO 24324 --- [config-server] [           main] o.e.m.config.ConfigServerApplication     : The following 1 profile is active: "native"
+2026-01-16T17:12:21.201+06:00  INFO 24324 --- [config-server] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=d302aa7a-0c89-3adc-8092-15c77812b76b
+2026-01-16T17:12:21.482+06:00  INFO 24324 --- [config-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8888 (http)
+2026-01-16T17:12:21.495+06:00  INFO 24324 --- [config-server] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T17:12:21.495+06:00  INFO 24324 --- [config-server] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+2026-01-16T17:12:21.554+06:00  INFO 24324 --- [config-server] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T17:12:21.555+06:00  INFO 24324 --- [config-server] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1198 ms
+2026-01-16T17:12:22.252+06:00  INFO 24324 --- [config-server] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-01-16T17:12:22.305+06:00  INFO 24324 --- [config-server] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8888 (http) with context path '/'
+2026-01-16T17:12:22.331+06:00  INFO 24324 --- [config-server] [           main] o.e.m.config.ConfigServerApplication     : Started ConfigServerApplication in 2.451 seconds (process running for 2.821)
+2026-01-16T17:12:39.007+06:00  INFO 24324 --- [config-server] [nio-8888-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T17:12:39.008+06:00  INFO 24324 --- [config-server] [nio-8888-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T17:12:39.010+06:00  INFO 24324 --- [config-server] [nio-8888-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-01-16T17:12:39.069+06:00  INFO 24324 --- [config-server] [nio-8888-exec-3] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/discovery-server.yml]' via location 'classpath:/config/'
+2026-01-16T17:12:39.069+06:00  INFO 24324 --- [config-server] [nio-8888-exec-3] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.572+06:00  INFO 24324 --- [config-server] [io-8888-exec-10] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/user-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.573+06:00  INFO 24324 --- [config-server] [io-8888-exec-10] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.576+06:00  INFO 24324 --- [config-server] [nio-8888-exec-9] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/notification-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.576+06:00  INFO 24324 --- [config-server] [nio-8888-exec-4] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/cart-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.577+06:00  INFO 24324 --- [config-server] [nio-8888-exec-9] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.577+06:00  INFO 24324 --- [config-server] [nio-8888-exec-4] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.578+06:00  INFO 24324 --- [config-server] [nio-8888-exec-8] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/order-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.579+06:00  INFO 24324 --- [config-server] [nio-8888-exec-8] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.581+06:00  INFO 24324 --- [config-server] [nio-8888-exec-2] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/auth-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.581+06:00  INFO 24324 --- [config-server] [nio-8888-exec-2] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.585+06:00  INFO 24324 --- [config-server] [nio-8888-exec-5] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/api-gateway.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.585+06:00  INFO 24324 --- [config-server] [nio-8888-exec-7] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/product-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.586+06:00  INFO 24324 --- [config-server] [nio-8888-exec-7] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.586+06:00  INFO 24324 --- [config-server] [nio-8888-exec-5] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.586+06:00  INFO 24324 --- [config-server] [nio-8888-exec-6] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/inventory-service.yml]' via location 'classpath:/config/'
+2026-01-16T17:13:09.588+06:00  INFO 24324 --- [config-server] [nio-8888-exec-6] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: Config resource 'class path resource [config/application.yml]' via location 'classpath:/config/'

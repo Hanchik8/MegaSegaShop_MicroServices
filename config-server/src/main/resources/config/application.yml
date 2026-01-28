@@ -1,0 +1,45 @@
+# Shared configuration for all microservices
+# This file is loaded by ALL services via Spring Cloud Config
+
+# =============================================================================
+# SECURITY - JWT Configuration
+# =============================================================================
+security:
+  jwt:
+    # IMPORTANT: In production, override via environment variable:
+    # SECURITY_JWT_SECRET=your-production-secret-here
+    secret: ${SECURITY_JWT_SECRET:change-me-demo-secret-32-bytes-minimum-123456}
+    expiration-minutes: ${SECURITY_JWT_EXPIRATION_MINUTES:60}
+
+# =============================================================================
+# DATABASE - Common datasource configuration
+# =============================================================================
+# URL is service-specific (defined in each service's config)
+# Credentials are shared and should be overridden in production
+spring:
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME:megasega}
+    password: ${SPRING_DATASOURCE_PASSWORD:megasega}
+
+# =============================================================================
+# DISTRIBUTED TRACING - Zipkin Configuration
+# =============================================================================
+management:
+  tracing:
+    sampling:
+      probability: 1.0  # Sample all requests (reduce in production)
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+# Prefer loopback IP for local service discovery resolution.
+# Override in Docker via application-docker.yml.
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: ${EUREKA_INSTANCE_IP_ADDRESS:127.0.0.1}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:127.0.0.1}

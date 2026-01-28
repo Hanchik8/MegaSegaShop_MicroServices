@@ -1,0 +1,17 @@
+# Shared Docker configuration for all microservices
+# Inherits from application.yml, can override if needed
+
+# JWT secret is inherited from application.yml
+# Override in docker-compose.yml via SECURITY_JWT_SECRET environment variable
+
+# In Docker, register by service name (resolves on the compose network).
+eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:${spring.application.name}}
+
+# Zipkin endpoint for Docker environment
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
