@@ -4,14 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MegaSegaShop</title>
-    <meta name="description" content="MegaSegaShop storefront powered by microservices." />
-    <meta name="theme-color" content="#0B1020" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="description" content="Shop retro consoles, games, and accessories with fast delivery and secure checkout." />
+    <meta name="theme-color" content="#000000" />
     <link rel="stylesheet" href="/assets/theme.css" />
   </head>
   <body>
@@ -23,7 +17,7 @@
           <div class="ms-brand-mark">MS</div>
           <div>
             <div class="ms-brand-title">MegaSegaShop</div>
-            <div class="ms-brand-subtitle">Arcade grade gear, curated and ready.</div>
+            <div class="ms-brand-subtitle">Retro gear, curated and ready to ship.</div>
           </div>
         </div>
         <nav class="ms-nav" aria-label="Primary">
@@ -46,12 +40,11 @@
       <section class="ms-section" id="story">
         <div class="ms-container ms-hero">
           <div class="ms-hero-content">
-            <div class="ms-pill">Live: product-service sync</div>
-            <h1>Retro power, modern reliability.</h1>
+            <div class="ms-pill">Top picks for your next game night</div>
+            <h1>Classic games, simple shopping.</h1>
             <p>
-              MegaSegaShop is a fast lane to iconic hardware and games. Every item
-              is streamed from a live catalog, priced in real time, and delivered
-              with arcade precision.
+              Find consoles, controllers, and must-play titles in minutes.
+              Transparent pricing, secure checkout, and delivery you can track.
             </p>
             <form class="ms-hero-search" id="catalogSearchForm" role="search">
               <label class="ms-sr-only" for="catalogSearch">Search catalog</label>
@@ -59,7 +52,7 @@
                 class="ms-input"
                 id="catalogSearch"
                 type="search"
-                placeholder="Search consoles, controllers, arcade kits"
+                placeholder="Search consoles, games, and accessories"
                 autocomplete="off"
               />
               <button class="ms-btn ms-btn-primary" type="submit">Search</button>
@@ -70,20 +63,20 @@
             </div>
             <div class="ms-hero-actions">
               <a class="ms-btn ms-btn-primary" href="#catalog">Explore catalog</a>
-              <a class="ms-btn ms-btn-ghost" href="/actuator/health">System health</a>
+              <a class="ms-btn ms-btn-ghost" href="#orders">Order support</a>
             </div>
             <div class="ms-hero-stats">
               <div class="ms-stat-card">
-                <span>9</span>
-                <small>microservices</small>
+                <span>500+</span>
+                <small>products in stock</small>
               </div>
               <div class="ms-stat-card">
-                <span>6</span>
-                <small>live databases</small>
+                <span>48h</span>
+                <small>dispatch on top items</small>
               </div>
               <div class="ms-stat-card">
-                <span>24/7</span>
-                <small>inventory sync</small>
+                <span>Easy</span>
+                <small>checkout and tracking</small>
               </div>
             </div>
           </div>
@@ -96,10 +89,10 @@
               <div class="ms-panel-tag">Ships in 48h</div>
             </div>
             <div class="ms-panel-card ms-panel-card-highlight">
-              <div class="ms-panel-title">What is live?</div>
+              <div class="ms-panel-title">Why customers come back</div>
               <p>
-                This UI is served by the API gateway and pulls product data straight
-                from product-service. No mock data, no shortcuts.
+                Clear pricing, secure payment, and helpful support from cart
+                to doorstep.
               </p>
             </div>
           </div>
@@ -111,7 +104,7 @@
           <div class="ms-section-head">
             <div>
               <h2>Catalog</h2>
-              <p>Filter by category or brand to shape the lineup.</p>
+              <p>Filter by category or brand to find exactly what you need.</p>
             </div>
             <div class="ms-filters">
               <label class="ms-filter">
@@ -132,7 +125,7 @@
           <div class="ms-catalog-meta">
             <div id="catalogCount" role="status" aria-live="polite">Loading products...</div>
             <div class="ms-catalog-actions">
-              <div id="catalogStatus" class="ms-status-pill" role="status" aria-live="polite">Contacting product-service</div>
+              <div id="catalogStatus" class="ms-status-pill" role="status" aria-live="polite">Loading catalog</div>
               <button id="catalogReloadButton" class="ms-btn ms-btn-ghost ms-btn-sm" type="button">Retry</button>
             </div>
           </div>
@@ -296,7 +289,7 @@
           <div class="ms-section-head">
             <div>
               <h2>Cart</h2>
-              <p>Live cart powered by cart-service and product-service.</p>
+              <p>Review your items and adjust quantities before checkout.</p>
             </div>
             <div class="ms-inline-actions">
               <button id="cartRefreshButton" class="ms-btn ms-btn-secondary" type="button">Refresh</button>
@@ -325,7 +318,7 @@
           <div class="ms-section-head">
             <div>
               <h2>Checkout</h2>
-              <p>Place an order and reserve inventory in real time.</p>
+              <p>Complete your order in a few steps with secure payment.</p>
             </div>
           </div>
           <div class="ms-section-grid ms-checkout-grid">
