@@ -1,5 +1,6 @@
 package org.example.megasegashop.inventory.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,5 +25,11 @@ public class InventoryItem {
 
     @Column(unique = true, nullable = false)
     private Long productId;
+
+    @Column(nullable = false)
     private int availableQuantity;
+
+    @JsonIgnore
+    @Column(nullable = false)
+    private int reservedQuantity;
 }

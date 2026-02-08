@@ -43,6 +43,7 @@ public class InventoryService {
             InventoryItemRequest itemRequest = request.items().get(i);
             InventoryItem item = lockedItems.get(i);
             item.setAvailableQuantity(item.getAvailableQuantity() - itemRequest.quantity());
+            item.setReservedQuantity(item.getReservedQuantity() + itemRequest.quantity());
             inventoryRepository.save(item);
         }
 
@@ -62,7 +63,14 @@ public class InventoryService {
                 // Item doesn't exist, skip (idempotent behavior)
                 continue;
             }
-            item.setAvailableQuantity(item.getAvailableQuantity() + itemRequest.quantity());
+
+            int releasable = Math.min(Math.max(itemRequest.quantity(), 0), Math.max(item.getReservedQuantity(), 0));
+            if (releasable <= 0) {
+                continue;
+            }
+
+            item.setReservedQuantity(item.getReservedQuantity() - releasable);
+            item.setAvailableQuantity(item.getAvailableQuantity() + releasable);
             inventoryRepository.save(item);
         }
 

@@ -53,7 +53,7 @@ public class InventoryDataSeeder implements CommandLineRunner {
             if (inventoryRepository.findByProductId(product.id()).isPresent()) {
                 continue;
             }
-            InventoryItem item = new InventoryItem(null, product.id(), defaultQuantity);
+            InventoryItem item = new InventoryItem(null, product.id(), defaultQuantity, 0);
             inventoryRepository.save(item);
             created++;
         }

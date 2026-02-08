@@ -32,7 +32,7 @@ class InventoryServiceTest {
     void reserveItems_withInsufficientStock_returnsFalse() {
         // Given
         Long productId = 1L;
-        InventoryItem item = new InventoryItem(null, productId, 5);
+        InventoryItem item = new InventoryItem(null, productId, 5, 0);
         inventoryRepository.save(item);
 
         InventoryReserveRequest request = new InventoryReserveRequest(
@@ -51,7 +51,7 @@ class InventoryServiceTest {
     void reserveItems_success_decreasesQuantity() {
         // Given
         Long productId = 2L;
-        InventoryItem item = new InventoryItem(null, productId, 20);
+        InventoryItem item = new InventoryItem(null, productId, 20, 0);
         inventoryRepository.save(item);
 
         InventoryReserveRequest request = new InventoryReserveRequest(
@@ -67,13 +67,14 @@ class InventoryServiceTest {
 
         InventoryItem updated = inventoryRepository.findByProductId(productId).orElseThrow();
         assertEquals(15, updated.getAvailableQuantity());
+        assertEquals(5, updated.getReservedQuantity());
     }
 
     @Test
     void releaseItems_success_increasesQuantity() {
         // Given
         Long productId = 3L;
-        InventoryItem item = new InventoryItem(null, productId, 10);
+        InventoryItem item = new InventoryItem(null, productId, 10, 5);
         inventoryRepository.save(item);
 
         InventoryReserveRequest request = new InventoryReserveRequest(
@@ -88,5 +89,24 @@ class InventoryServiceTest {
 
         InventoryItem updated = inventoryRepository.findByProductId(productId).orElseThrow();
         assertEquals(15, updated.getAvailableQuantity());
+        assertEquals(0, updated.getReservedQuantity());
+    }
+
+    @Test
+    void releaseItems_whenNothingReserved_isIdempotent() {
+        Long productId = 4L;
+        InventoryItem item = new InventoryItem(null, productId, 7, 0);
+        inventoryRepository.save(item);
+
+        InventoryReserveRequest request = new InventoryReserveRequest(
+                List.of(new InventoryItemRequest(productId, 3))
+        );
+
+        InventoryReserveResponse response = inventoryService.releaseItems(request);
+
+        assertTrue(response.success());
+        InventoryItem updated = inventoryRepository.findByProductId(productId).orElseThrow();
+        assertEquals(7, updated.getAvailableQuantity());
+        assertEquals(0, updated.getReservedQuantity());
     }
 }

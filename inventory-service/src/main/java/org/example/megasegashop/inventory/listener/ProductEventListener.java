@@ -26,7 +26,8 @@ public class ProductEventListener {
                 event.productId(), event.productName(), event.initialQuantity());
 
         // Check if inventory item already exists (idempotency)
-        if (inventoryRepository.findByProductId(event.productId()).isPresent()) {
+        // Use pessimistic lock to prevent race condition with concurrent Kafka retries
+        if (inventoryRepository.findWithLockByProductId(event.productId()).isPresent()) {
             log.warn("InventoryItem for productId={} already exists, skipping", event.productId());
             return;
         }
@@ -34,7 +35,8 @@ public class ProductEventListener {
         InventoryItem item = new InventoryItem(
                 null,
                 event.productId(),
-                event.initialQuantity()
+                event.initialQuantity(),
+                0
         );
 
         inventoryRepository.save(item);
@@ -53,7 +55,7 @@ public class ProductEventListener {
                 event.productId(), event.productName(), event.inventoryDelta());
 
         InventoryItem item = inventoryRepository.findWithLockByProductId(event.productId())
-                .orElseGet(() -> new InventoryItem(null, event.productId(), 0));
+                .orElseGet(() -> new InventoryItem(null, event.productId(), 0, 0));
 
         int updatedQuantity = item.getAvailableQuantity() + event.inventoryDelta();
         if (updatedQuantity < 0) {
