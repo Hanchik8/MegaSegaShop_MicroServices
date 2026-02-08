@@ -22,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -42,6 +44,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final KafkaTemplate<String, OrderPlacedEvent> orderPlacedKafkaTemplate;
     private final KafkaTemplate<String, OrderCancelledEvent> orderCancelledKafkaTemplate;
+    private final TransactionTemplate requiresNewTransaction;
 
     public OrderService(
             CartClient cartClient,
@@ -49,7 +52,8 @@ public class OrderService {
             UserProfileClient userProfileClient,
             OrderRepository orderRepository,
             KafkaTemplate<String, OrderPlacedEvent> orderPlacedKafkaTemplate,
-            KafkaTemplate<String, OrderCancelledEvent> orderCancelledKafkaTemplate
+            KafkaTemplate<String, OrderCancelledEvent> orderCancelledKafkaTemplate,
+            PlatformTransactionManager transactionManager
     ) {
         this.cartClient = cartClient;
         this.inventoryClient = inventoryClient;
@@ -57,6 +61,8 @@ public class OrderService {
         this.orderRepository = orderRepository;
         this.orderPlacedKafkaTemplate = orderPlacedKafkaTemplate;
         this.orderCancelledKafkaTemplate = orderCancelledKafkaTemplate;
+        this.requiresNewTransaction = new TransactionTemplate(transactionManager);
+        this.requiresNewTransaction.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
     }
 
     /**
@@ -88,14 +94,18 @@ public class OrderService {
                         .toList()
         );
 
-        // Step 2: Reserve inventory
-        InventoryReserveResponse reserveResponse = inventoryClient.reserve(reserveRequest);
-        if (!reserveResponse.success()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, reserveResponse.message());
-        }
+        boolean reserveAttempted = false;
+        boolean reservationConfirmed = false;
 
-        // From this point, we need compensating transactions if anything fails
         try {
+            // Step 2: Reserve inventory
+            reserveAttempted = true;
+            InventoryReserveResponse reserveResponse = inventoryClient.reserve(reserveRequest);
+            if (!reserveResponse.success()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, reserveResponse.message());
+            }
+            reservationConfirmed = true;
+
             // Step 3: Create and save order
             Order order = createOrder(request, cart);
             Order saved = orderRepository.save(order);
@@ -120,24 +130,18 @@ public class OrderService {
             }
 
             return toResponse(saved);
-
+        } catch (ResponseStatusException rse) {
+            if (reservationConfirmed) {
+                compensateInventoryRelease(reserveRequest);
+            }
+            throw rse;
         } catch (Exception ex) {
-            // Compensating transaction: release reserved inventory
-            log.warn("Order creation failed, executing compensating transaction to release inventory");
-            try {
-                inventoryClient.release(reserveRequest);
-                log.info("Inventory released successfully");
-            } catch (Exception releaseEx) {
-                log.error("CRITICAL: Failed to release inventory during compensation: {}", 
-                        releaseEx.getMessage());
-                // In production, this should trigger an alert and manual intervention
+            // Only compensate if reservation was actually confirmed (success=true)
+            // Do NOT compensate if reservation was merely attempted but failed
+            if (reservationConfirmed) {
+                compensateInventoryRelease(reserveRequest);
             }
-            
-            // Re-throw the original exception
-            if (ex instanceof ResponseStatusException rse) {
-                throw rse;
-            }
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, 
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Order creation failed: " + ex.getMessage());
         }
     }
@@ -195,7 +199,6 @@ public class OrderService {
                 .toList();
     }
 
-    @Transactional
     public OrderResponse updateStatus(Long orderId, OrderStatus newStatus) {
         if (newStatus == OrderStatus.CANCELLED) {
             return cancelOrder(orderId);
@@ -213,28 +216,57 @@ public class OrderService {
         return toResponse(saved);
     }
 
-    @Transactional
     public OrderResponse cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+        Order order = requiresNewTransaction.execute(status -> {
+            Order loaded = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
 
+            if (loaded.getStatus() == OrderStatus.CANCELLED) {
+                return loaded;
+            }
+            if (loaded.getStatus() == OrderStatus.DELIVERED) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Delivered orders cannot be cancelled");
+            }
+            if (loaded.getStatus() != OrderStatus.CANCELLING) {
+                loaded.setStatus(OrderStatus.CANCELLING);
+                return orderRepository.save(loaded);
+            }
+            return loaded;
+        });
+
+        if (order == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Order cancellation failed");
+        }
         if (order.getStatus() == OrderStatus.CANCELLED) {
             return toResponse(order);
         }
-        if (order.getStatus() == OrderStatus.DELIVERED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Delivered orders cannot be cancelled");
-        }
 
         InventoryReserveRequest releaseRequest = buildInventoryReleaseRequest(order);
+        InventoryReserveResponse releaseResponse;
         try {
-            inventoryClient.release(releaseRequest);
+            releaseResponse = inventoryClient.release(releaseRequest);
         } catch (Exception ex) {
             log.error("Failed to release inventory for order {}: {}", orderId, ex.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Inventory service unavailable");
         }
+        if (!releaseResponse.success()) {
+            log.error("Failed to release inventory for order {}: {}", orderId, releaseResponse.message());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Inventory release failed");
+        }
 
-        order.setStatus(OrderStatus.CANCELLED);
-        Order saved = orderRepository.save(order);
+        Order saved = requiresNewTransaction.execute(status -> {
+            Order loaded = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+            if (loaded.getStatus() != OrderStatus.CANCELLED) {
+                loaded.setStatus(OrderStatus.CANCELLED);
+                return orderRepository.save(loaded);
+            }
+            return loaded;
+        });
+
+        if (saved == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Order cancellation failed");
+        }
 
         try {
             String phone = resolvePhone(saved.getUserId());
@@ -255,6 +287,21 @@ public class OrderService {
         return toResponse(saved);
     }
 
+    private void compensateInventoryRelease(InventoryReserveRequest reserveRequest) {
+        log.warn("Order creation failed, executing compensating transaction to release inventory");
+        try {
+            InventoryReserveResponse releaseResponse = inventoryClient.release(reserveRequest);
+            if (releaseResponse.success()) {
+                log.info("Inventory released successfully");
+                return;
+            }
+            log.error("CRITICAL: Failed to release inventory during compensation: {}", releaseResponse.message());
+        } catch (Exception releaseEx) {
+            log.error("CRITICAL: Failed to release inventory during compensation: {}",
+                    releaseEx.getMessage());
+        }
+    }
+
     private OrderResponse toResponse(Order order) {
         List<OrderItemResponse> items = order.getItems().stream()
                 .map(item -> new OrderItemResponse(
@@ -264,7 +311,7 @@ public class OrderService {
                         item.getQuantity()
                 ))
                 .toList();
-        return new OrderResponse(order.getId(), order.getStatus(), order.getTotalAmount(), order.getCreatedAt(), items);
+        return new OrderResponse(order.getId(), order.getEmail(), order.getStatus(), order.getTotalAmount(), order.getCreatedAt(), items);
     }
 
     private InventoryReserveRequest buildInventoryReleaseRequest(Order order) {

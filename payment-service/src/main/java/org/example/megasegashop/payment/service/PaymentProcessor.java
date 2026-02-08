@@ -9,6 +9,19 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.util.UUID;
 
+/**
+ * Mock payment processor for demonstration purposes.
+ * 
+ * <p><b>SECURITY WARNING:</b> This service handles sensitive credit card data.
+ * In a production environment:
+ * <ul>
+ *   <li>Never log full card numbers - only last 4 digits</li>
+ *   <li>Card data should not be stored persistently</li>
+ *   <li>Use tokenization via a PCI-compliant payment gateway (Stripe, Braintree, etc.)</li>
+ *   <li>Ensure all card data is transmitted over TLS</li>
+ *   <li>Comply with PCI-DSS requirements</li>
+ * </ul>
+ */
 @Service
 public class PaymentProcessor {
     public PaymentResponse charge(PaymentRequest request) {
