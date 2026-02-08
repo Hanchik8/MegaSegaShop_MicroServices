@@ -59,4 +59,11 @@ public class UserProfileService {
 
         return userProfileRepository.save(profile);
     }
+
+    @Transactional
+    public void deleteProfile(Long id) {
+        UserProfile profile = userProfileRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
+        userProfileRepository.delete(profile);
+    }
 }
