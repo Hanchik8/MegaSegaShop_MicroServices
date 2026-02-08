@@ -22,6 +22,10 @@ spring:
     properties:
       spring.json.trusted.packages: org.example.megasegashop.notification.event
       spring.json.value.default.type: org.example.megasegashop.notification.event.OrderPlacedEvent
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 notification:
   email:

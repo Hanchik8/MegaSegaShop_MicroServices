@@ -297,6 +297,9 @@ public class NotificationDispatcher {
     }
 
     private boolean isDiscordWebhook(String url) {
+        if (url == null) {
+            return false;
+        }
         String lower = url.toLowerCase(Locale.ROOT);
         return lower.contains("discord.com/api/webhooks")
                 || lower.contains("discordapp.com/api/webhooks");

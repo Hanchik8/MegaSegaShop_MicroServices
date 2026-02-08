@@ -7,17 +7,30 @@
 #   DB_PASSWORD=your-secure-password
 
 x-jwt-secret: &jwt-secret
-  SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:-change-me-demo-secret-32-bytes-minimum-123456}
+  SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:?SECURITY_JWT_SECRET must be set in .env or environment}
   SECURITY_JWT_EXPIRATION_MINUTES: ${SECURITY_JWT_EXPIRATION_MINUTES:-60}
 
 x-db-credentials: &db-credentials
   SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-megasega}
   SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-megasega}
 
+x-java-env: &java-env
+  JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=20 -XX:MinRAMPercentage=10"
+
+x-java-limits: &java-limits
+  mem_limit: 512m
+  cpus: "0.50"
+
+x-java-limits-lg: &java-limits-lg
+  mem_limit: 768m
+  cpus: "0.75"
+
 services:
   postgres:
-    image: postgres:16
+    image: postgres:15
     container_name: megasegashop-postgres
+    mem_limit: 768m
+    cpus: "0.50"
     environment:
       POSTGRES_USER: ${DB_USERNAME:-megasega}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-megasega}
@@ -37,9 +50,12 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.3
     container_name: megasegashop-zookeeper
+    mem_limit: 256m
+    cpus: "0.25"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+      KAFKA_HEAP_OPTS: "-Xms128m -Xmx256m"
     healthcheck:
       disable: true
     networks:
@@ -48,11 +64,14 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.5.3
     container_name: megasegashop-kafka
+    mem_limit: 1024m
+    cpus: "1.00"
     depends_on:
       zookeeper:
         condition: service_started
     environment:
       KAFKA_BROKER_ID: 1
+      KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
@@ -73,6 +92,8 @@ services:
   redis:
     image: redis:7-alpine
     container_name: megasegashop-redis
+    mem_limit: 256m
+    cpus: "0.25"
     ports:
       - "6379:6379"
     healthcheck:
@@ -86,6 +107,8 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: megasegashop-mailhog
+    mem_limit: 128m
+    cpus: "0.25"
     ports:
       - "1025:1025"
       - "8025:8025"
@@ -95,12 +118,17 @@ services:
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: megasegashop-zipkin
+    mem_limit: 512m
+    cpus: "0.50"
+    environment:
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     ports:
       - "9411:9411"
     networks:
       - megasegashop-net
 
   config-server:
+    <<: *java-limits
     build:
       context: .
       dockerfile: config-server/Dockerfile
@@ -109,6 +137,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      <<: *java-env
       SPRING_PROFILES_ACTIVE: native,docker
       SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: classpath:/config
     ports:
@@ -118,6 +147,7 @@ services:
     restart: on-failure
 
   discovery-server:
+    <<: *java-limits
     build:
       context: .
       dockerfile: discovery-server/Dockerfile
@@ -126,6 +156,7 @@ services:
       config-server:
         condition: service_started
     environment:
+      <<: *java-env
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
     ports:
@@ -135,6 +166,7 @@ services:
     restart: on-failure
 
   api-gateway:
+    <<: *java-limits
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
@@ -145,7 +177,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *jwt-secret
+      <<: [*jwt-secret, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -156,6 +188,7 @@ services:
     restart: on-failure
 
   auth-service:
+    <<: *java-limits
     build:
       context: .
       dockerfile: auth-service/Dockerfile
@@ -168,7 +201,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: [*jwt-secret, *db-credentials]
+      <<: [*jwt-secret, *db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -178,6 +211,7 @@ services:
     restart: on-failure
 
   user-service:
+    <<: *java-limits
     build:
       context: .
       dockerfile: user-service/Dockerfile
@@ -190,7 +224,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *db-credentials
+      <<: [*db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -200,6 +234,7 @@ services:
     restart: on-failure
 
   product-service:
+    <<: *java-limits-lg
     build:
       context: .
       dockerfile: product-service/Dockerfile
@@ -216,7 +251,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *db-credentials
+      <<: [*db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -229,6 +264,7 @@ services:
     restart: on-failure
 
   cart-service:
+    <<: *java-limits
     build:
       context: .
       dockerfile: cart-service/Dockerfile
@@ -243,7 +279,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *db-credentials
+      <<: [*db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -255,6 +291,7 @@ services:
     restart: on-failure
 
   inventory-service:
+    <<: *java-limits-lg
     build:
       context: .
       dockerfile: inventory-service/Dockerfile
@@ -269,7 +306,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *db-credentials
+      <<: [*db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -280,6 +317,7 @@ services:
     restart: on-failure
 
   order-service:
+    <<: *java-limits-lg
     build:
       context: .
       dockerfile: order-service/Dockerfile
@@ -294,7 +332,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
-      <<: *db-credentials
+      <<: [*db-credentials, *java-env]
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -305,6 +343,7 @@ services:
     restart: on-failure
 
   payment-service:
+    <<: *java-limits
     build:
       context: .
       dockerfile: payment-service/Dockerfile
@@ -315,6 +354,7 @@ services:
       discovery-server:
         condition: service_started
     environment:
+      <<: *java-env
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
@@ -323,6 +363,7 @@ services:
     restart: on-failure
 
   notification-service:
+    <<: *java-limits
     build:
       context: .
       dockerfile: notification-service/Dockerfile
@@ -330,15 +371,20 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       config-server:
         condition: service_started
       discovery-server:
         condition: service_started
     environment:
+      <<: *java-env
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       SMTP_HOST: ${SMTP_HOST:-mailhog}
       SMTP_PORT: ${SMTP_PORT:-1025}
       SMTP_USERNAME: ${SMTP_USERNAME:-}
@@ -358,6 +404,8 @@ services:
   prometheus:
     image: prom/prometheus:v2.52.0
     container_name: megasegashop-prometheus
+    mem_limit: 512m
+    cpus: "0.50"
     profiles:
       - observability
     volumes:
@@ -370,6 +418,8 @@ services:
   grafana:
     image: grafana/grafana:10.4.3
     container_name: megasegashop-grafana
+    mem_limit: 512m
+    cpus: "0.50"
     profiles:
       - observability
     environment:
