@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +20,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class ImageService {
+    private static final long MAX_IMAGE_BYTES = DataSize.ofMegabytes(5).toBytes();
+
     private final ImageRepository imageRepository;
     private final ProductRepository productRepository;
 
@@ -33,6 +36,9 @@ public class ImageService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         if (file == null || file.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image file is required");
+        }
+        if (file.getSize() > MAX_IMAGE_BYTES) {
+            throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE, "Image exceeds 5 MB limit");
         }
 
         Image image = new Image();

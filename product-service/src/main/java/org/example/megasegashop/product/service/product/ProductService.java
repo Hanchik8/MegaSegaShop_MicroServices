@@ -12,6 +12,7 @@ import org.example.megasegashop.product.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class ProductService {
     private final KafkaTemplate<String, ProductDeletedEvent> productDeletedKafkaTemplate;
 
     @Transactional
-    @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
+    @CacheEvict(cacheNames = "products", allEntries = true)
     public Product addProduct(Product product, int initialQuantity) {
         Product saved = productRepository.save(product);
         
@@ -60,7 +61,10 @@ public class ProductService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "products", allEntries = true),
+            @CacheEvict(cacheNames = "product-by-id", key = "#id")
+    })
     public void deleteProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found..."));
@@ -73,7 +77,10 @@ public class ProductService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = {"products", "product-by-id"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "products", allEntries = true),
+            @CacheEvict(cacheNames = "product-by-id", key = "#id")
+    })
     public Product updateProduct(Long id, ProductUpdateRequest request, Category category) {
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found..."));
