@@ -23,9 +23,17 @@ public class JwtService {
         this.expirationMinutes = expirationMinutes;
     }
 
-    public JwtToken issueToken(String subject, String role) {
-        Object[] result = JwtTokenUtil.generateTokenWithExpiry(subject, role, key, expirationMinutes);
+    public JwtToken issueToken(String subject, String role, Long userId) {
+        Object[] result = JwtTokenUtil.generateTokenWithExpiry(subject, role, userId, key, expirationMinutes);
         return new JwtToken((String) result[0], (Instant) result[1]);
+    }
+
+    /**
+     * @deprecated Use {@link #issueToken(String, String, Long)} instead.
+     */
+    @Deprecated
+    public JwtToken issueToken(String subject, String role) {
+        return issueToken(subject, role, null);
     }
 
     public boolean isValid(String token) {
@@ -39,4 +47,9 @@ public class JwtService {
     public String extractRole(String token) {
         return JwtTokenUtil.extractRole(token, key);
     }
+
+    public Long extractUserId(String token) {
+        return JwtTokenUtil.extractUserId(token, key);
+    }
 }
+

@@ -12,7 +12,8 @@ import org.example.megasegashop.auth.repository.AuthUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -21,47 +22,84 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserProfileClient userProfileClient;
+    private final TransactionTemplate requiresNewTransaction;
 
     public AuthService(
             AuthUserRepository authUserRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
-            UserProfileClient userProfileClient
+            UserProfileClient userProfileClient,
+            PlatformTransactionManager transactionManager
     ) {
         this.authUserRepository = authUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.userProfileClient = userProfileClient;
+        this.requiresNewTransaction = new TransactionTemplate(transactionManager);
+        this.requiresNewTransaction.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
     }
 
-    @Transactional
     public AuthResponse register(RegisterRequest request) {
-        if (authUserRepository.existsByEmail(request.email())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
+        // Use pessimistic lock inside transaction to prevent race condition
+        // where two concurrent registrations pass the existence check
+        AuthUser savedUser = requiresNewTransaction.execute(status -> {
+            // Check with lock to prevent concurrent duplicate registrations
+            if (authUserRepository.findWithLockByEmail(request.email()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
+            }
+            return authUserRepository.save(
+                    new AuthUser(
+                            null,
+                            request.email(),
+                            passwordEncoder.encode(request.password()),
+                            "ROLE_USER",
+                            null
+                    )
+            );
+        });
+
+        if (savedUser == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create user");
         }
 
-        AuthUser user = new AuthUser(
-                null,
-                request.email(),
-                passwordEncoder.encode(request.password()),
-                "ROLE_USER",
-                null
-        );
+        UserProfileResponse profile;
+        try {
+            profile = userProfileClient.createProfile(
+                    new CreateUserProfileRequest(
+                            savedUser.getId(),
+                            savedUser.getEmail(),
+                            request.firstName(),
+                            request.lastName(),
+                            request.phone()
+                    )
+            );
+        } catch (Exception ex) {
+            requiresNewTransaction.executeWithoutResult(status -> authUserRepository.deleteById(savedUser.getId()));
+            throw ex;
+        }
 
-        AuthUser savedUser = authUserRepository.save(user);
-        UserProfileResponse profile = userProfileClient.createProfile(
-                new CreateUserProfileRequest(
-                        savedUser.getId(),
-                        savedUser.getEmail(),
-                        request.firstName(),
-                        request.lastName(),
-                        request.phone()
-                )
-        );
-        savedUser.setProfileId(profile.id());
-        authUserRepository.save(savedUser);
+        try {
+            AuthUser userWithProfile = savedUser;
+            requiresNewTransaction.executeWithoutResult(status -> {
+                AuthUser reloaded = authUserRepository.findById(userWithProfile.getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                reloaded.setProfileId(profile.id());
+                authUserRepository.save(reloaded);
+            });
+            savedUser.setProfileId(profile.id());
+        } catch (Exception ex) {
+            try {
+                userProfileClient.deleteProfile(profile.id());
+            } catch (Exception compensationEx) {
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Failed to link user profile; manual cleanup required"
+                );
+            }
+            throw ex;
+        }
 
-        JwtToken token = jwtService.issueToken(savedUser.getEmail(), savedUser.getRole());
+        JwtToken token = jwtService.issueToken(savedUser.getEmail(), savedUser.getRole(), savedUser.getId());
         return new AuthResponse(token.token(), "Bearer", token.expiresAt(), savedUser.getId(), savedUser.getProfileId());
     }
 
@@ -72,7 +110,7 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        JwtToken token = jwtService.issueToken(user.getEmail(), user.getRole());
+        JwtToken token = jwtService.issueToken(user.getEmail(), user.getRole(), user.getId());
         return new AuthResponse(token.token(), "Bearer", token.expiresAt(), user.getId(), user.getProfileId());
     }
 }

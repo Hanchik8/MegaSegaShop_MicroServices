@@ -26,4 +26,9 @@ public class JwtTokenService {
     public String extractRole(String token) {
         return JwtTokenUtil.extractRole(token, key);
     }
+
+    public Long extractUserId(String token) {
+        return JwtTokenUtil.extractUserId(token, key);
+    }
 }
+

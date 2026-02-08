@@ -43,12 +43,18 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
         String email = jwtTokenService.extractSubject(token);
         String role = jwtTokenService.extractRole(token);
+        Long userId = jwtTokenService.extractUserId(token);
+
+        var requestBuilder = exchange.getRequest().mutate()
+                .header("X-User-Email", email)
+                .header("X-User-Role", role);
+        
+        if (userId != null) {
+            requestBuilder.header("X-User-Id", userId.toString());
+        }
 
         return chain.filter(exchange.mutate()
-                .request(exchange.getRequest().mutate()
-                        .header("X-User-Email", email)
-                        .header("X-User-Role", role)
-                        .build())
+                .request(requestBuilder.build())
                 .build());
     }
 

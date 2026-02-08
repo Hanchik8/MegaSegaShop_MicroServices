@@ -31,6 +31,7 @@ public class CartService {
         this.productClient = productClient;
     }
 
+    @Transactional(readOnly = true)
     public CartResponse getCart(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> new Cart(null, userId, new ArrayList<>(), null, null));

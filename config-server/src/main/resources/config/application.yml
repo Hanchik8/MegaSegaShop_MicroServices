@@ -6,9 +6,9 @@
 # =============================================================================
 security:
   jwt:
-    # IMPORTANT: In production, override via environment variable:
-    # SECURITY_JWT_SECRET=your-production-secret-here
-    secret: ${SECURITY_JWT_SECRET:change-me-demo-secret-32-bytes-minimum-123456}
+    # SECURITY_JWT_SECRET is mandatory in all environments.
+    # If missing, startup must fail to prevent insecure default JWT signing.
+    secret: ${SECURITY_JWT_SECRET}
     expiration-minutes: ${SECURITY_JWT_EXPIRATION_MINUTES:60}
 
 # =============================================================================

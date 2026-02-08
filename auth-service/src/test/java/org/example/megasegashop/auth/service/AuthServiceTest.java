@@ -12,10 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,6 +26,9 @@ class AuthServiceTest {
 
     @Autowired
     private AuthUserRepository authUserRepository;
+
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private UserProfileClient userProfileClient;
@@ -90,7 +90,21 @@ class AuthServiceTest {
         assertNotNull(response.accessToken());
         assertEquals("Bearer", response.tokenType());
         assertNotNull(response.userId());
+        assertEquals(response.userId(), jwtService.extractUserId(response.accessToken()));
 
         verify(userProfileClient).createProfile(any());
+    }
+
+    @Test
+    void register_whenProfileCreationFails_rollsBackAuthUser() {
+        when(userProfileClient.createProfile(any()))
+                .thenThrow(new RuntimeException("user-service unavailable"));
+
+        RegisterRequest request = new RegisterRequest(
+                "rollback@test.com", "Password123", "Roll", "Back", "+1234567890"
+        );
+
+        assertThrows(RuntimeException.class, () -> authService.register(request));
+        assertFalse(authUserRepository.existsByEmail("rollback@test.com"));
     }
 }
